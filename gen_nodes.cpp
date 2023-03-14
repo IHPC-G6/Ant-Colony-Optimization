@@ -6,12 +6,12 @@
 
 using namespace std;
 
-bool occupied(int i, int j, int **matrix){
+bool occupied(int i, int j, vector<vector<int>> matrix){
     if(matrix[i][j]) return false;
     return true;
 }
 
-bool add_point(int x_coordinate, int y_coordinate, int **matrix, int N,int *x_coordinates,int *y_coordinates, int k){
+bool add_point(int x_coordinate, int y_coordinate, vector<vector<int>> matrix, int N,int *x_coordinates,int *y_coordinates, int k){
     int i = x_coordinate / N;
     int j = y_coordinate / N;
 
@@ -28,23 +28,24 @@ bool add_point(int x_coordinate, int y_coordinate, int **matrix, int N,int *x_co
 int main(){
     int N, x_min, x_max, y_min, y_max, x_radius, y_radius;
     do {cout<<"Input the ammount of nodes you want to generate (one node minimum): ";
-    cin>>N;}while(N > 0);
+    cin>>N;}while(N <= 0);
     
     do{
         cout<<"\nInput the range [x_min - x_max] you probably would like to generate each node: ";
         cin>>x_min>>x_max;
 	cout<<"\n";
-    }while(x_max - x_min > sqrt(N));
+    }while(x_max - x_min <= sqrt(N));
     
     do{
         cout<<"\nInput the range [y_min - y_max] you probably would like to generate each node: ";
         cin>>y_min>>y_max;
 	cout<<"\n";
-    }while(y_max - y_min > sqrt(N));
+    }while(y_max - y_min <= sqrt(N));
     
     x_radius = (x_max - x_min) / N;
     y_radius = (y_max - y_min) / N;
-    int occupation_matrix[N][N];
+    // int occupation_matrix[N][N];
+    vector<vector<int>> occupation_matrix (N, vector<int>(N));
     int x_coordinates[N], y_coordinates[N];
     random_device rd;
     mt19937 gen(rd());
