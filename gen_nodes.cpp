@@ -32,8 +32,8 @@ int main(){
     
     do{
         cout<<"\nInput the range [x_min - x_max] you probably would like to generate each node: ";
-        cin<<x_min<<x_max;
-	cout>>"\n";
+        cin>>x_min>>x_max;
+	cout<<"\n";
     }while(x_max - x_min > sqrt(N));
     
     do{
