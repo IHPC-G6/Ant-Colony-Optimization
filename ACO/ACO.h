@@ -2,14 +2,16 @@
 #define ACO_H
 
 class ACO {
-public:
-    ACO(); // constructor
-    virtual ~ACO(); // destructor
+    public:
+        int Q;
+        float rho;
+        float beta;
+        float alpha;
+        int ant_count;
+        int iterations;
+        int update_strategy;
 
-    // other member functions
+        ACO(int ant_count, int iterations, float alpha, float beta, float rho, int q, int strategy);
+    };
 
-private:
-    // member variables
-};
-
-#endif /* ACO_H */
+#endif // ACO_H
