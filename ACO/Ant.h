@@ -13,12 +13,12 @@ class Ant {
         ACOGraph* graph;
         double solution_cost;
         std::vector<int> solution;
-        std::vector<std::vector<double>> pheromone_delta;
         std::vector<int> allowed_nodes;
         std::vector<std::vector<double>> eta;
         int current_node;
 
     public:
+        std::vector<std::vector<double>> pheromone_delta_matrix;
         Ant(ACO* aco, ACOGraph* g);
         int _select_next();
         void _update_pheromone_delta();

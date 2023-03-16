@@ -12,7 +12,7 @@ class Ant {
         ACOGraph* graph;
         double solution_cost;
         std::vector<int> solution;
-        std::vector<std::vector<double>> pheromone_delta;
+        std::vector<std::vector<double>> pheromone_delta_matrix;
         std::vector<int> allowed_nodes;
         std::vector<std::vector<double>> eta;
         int current_node;
@@ -24,7 +24,7 @@ class Ant {
             solution_cost = 0.0;
             solution.clear(); // initializing empty vector with clear
             // init 3D pheremone delta matrix with zeros
-            pheromone_delta.resize(graph->n, std::vector<double>(graph->n, 0.0));
+            pheromone_delta_matrix.resize(graph->n, std::vector<double>(graph->n, 0.0));
             // init allowed nodes empty array of size n
             allowed_nodes.resize(graph->n);
             // fill allowed nodes array with nodes indexes (i)
@@ -90,20 +90,20 @@ class Ant {
             return selected_node;
         }
 
-        void _update_pheromone_delta() {
-        pheromone_delta = std::vector<std::vector<double>>(graph->n, std::vector<double>(graph->n, 0.0));
+        void _update_pheromone_delta_matrix() {
+        pheromone_delta_matrix = std::vector<std::vector<double>>(graph->n, std::vector<double>(graph->n, 0.0));
         for (int ii = 1; ii < solution.size(); ++ii) {
             int i = solution[ii - 1];
             int j = solution[ii];
 
             if (colony->update_strategy == 1) { // ant-quality system
-                pheromone_delta[i][j] = colony->Q;
+                pheromone_delta_matrix[i][j] = colony->Q;
             }
             else if (colony->update_strategy == 2) { // ant-density system
-                pheromone_delta[i][j] = colony->Q / graph->cost_matrix[i][j];
+                pheromone_delta_matrix[i][j] = colony->Q / graph->cost_matrix[i][j];
             }
             else { // ant-cycle system: // wikipedia 
-                pheromone_delta[i][j] = colony->Q / solution_cost;
+                pheromone_delta_matrix[i][j] = colony->Q / solution_cost;
             }
         }
     }
