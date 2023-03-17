@@ -10,18 +10,18 @@
 class Ant {
     private:
         ACO* colony;
-        ACOGraph* graph;
-        double solution_cost;
-        std::vector<int> solution;
+        ACOGraph* graph;           
         std::vector<int> allowed_nodes;
         std::vector<std::vector<double>> eta;
         int current_node;
 
     public:
         std::vector<std::vector<double>> pheromone_delta_matrix;
+        double solution_cost;   
+        std::vector<int> solution;
         Ant(ACO* aco, ACOGraph* g);
-        int _select_next();
-        void _update_pheromone_delta();
+        int select_next_node();
+        void update_pheromone_delta();
 };
 
 #endif //ANT_H

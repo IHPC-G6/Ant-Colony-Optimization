@@ -10,14 +10,15 @@ class Ant {
     private:
         ACO* colony;
         ACOGraph* graph;
-        double solution_cost;
-        std::vector<int> solution;
-        std::vector<std::vector<double>> pheromone_delta_matrix;
         std::vector<int> allowed_nodes;
         std::vector<std::vector<double>> eta;
         int current_node;
 
     public:
+        std::vector<std::vector<double>> pheromone_delta_matrix;
+        double solution_cost;
+        std::vector<int> solution;
+
         Ant(ACO* aco, ACOGraph* g) {
             colony = aco;
             graph = g;
@@ -48,7 +49,7 @@ class Ant {
             allowed_nodes.erase(std::remove(allowed_nodes.begin(), allowed_nodes.end(), starting_node), allowed_nodes.end());
         }
 
-        int _select_next() {
+        int select_next_node() {
             // See edge selection formula
             double denominator = 0;
             for (int i : allowed_nodes) {
@@ -90,7 +91,7 @@ class Ant {
             return selected_node;
         }
 
-        void _update_pheromone_delta_matrix() {
+        void update_pheromone_delta_matrix() {
         pheromone_delta_matrix = std::vector<std::vector<double>>(graph->n, std::vector<double>(graph->n, 0.0));
         for (int ii = 1; ii < solution.size(); ++ii) {
             int i = solution[ii - 1];
