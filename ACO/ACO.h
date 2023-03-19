@@ -4,7 +4,7 @@
 class ACO {
     private:
         void update_pheromone_matrix(ACOGraph* graph, std::vector<Ant> ants);
-        
+
     public:
         int Q;
         float rho;
