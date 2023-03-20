@@ -1,4 +1,7 @@
 #include <vector>
+#include <cstdlib>
+#include <cmath>
+#include <algorithm>
 
 class ACO;
 class ACOGraph;
@@ -58,7 +61,7 @@ class Ant {
             solution.push_back(starting_node); // starting node is added to solution for this ant solution
             current_node = starting_node; // current node is starting node
             // remove starting node from allowed_nodes: first node (city) is not allowed to be visited again // nodes can be visited just once
-            allowed_nodes.erase(std::remove(allowed_nodes.begin(), allowed_nodes.end(), starting_node), allowed_nodes.end());
+            allowed_nodes.erase(remove(allowed_nodes.begin(), allowed_nodes.end(), starting_node), allowed_nodes.end());
         }
 
         int select_next_node() {
@@ -70,7 +73,7 @@ class Ant {
 
             std::vector<double> probabilities(graph->n, 0);
             for (int i = 0; i < graph->n; ++i) {
-                if (find(allowed_nodes.begin(), allowed_nodes.end(), i) != allowed_nodes.end()) {
+                if (std::find(allowed_nodes.begin(), allowed_nodes.end(), i) != allowed_nodes.end()) {
                     probabilities[i] = (pow(graph->pheromone_matrix[current_node][i], colony->alpha) * pow(eta[current_node][i], colony->beta)) / denominator;
                 }
             }
