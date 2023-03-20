@@ -85,23 +85,23 @@ int Ant::select_next_node() {
     solution.push_back(selected_node);
     solution_cost += graph->cost_matrix[current_node][selected_node];
     current_node = selected_node;
-
     return selected_node;
 }
 
 void Ant::update_pheromone_delta_matrix() {
-pheromone_delta_matrix = std::vector<std::vector<double>>(graph->n, std::vector<double>(graph->n, 0.0));
-for (int ii = 1; ii < solution.size(); ++ii) {
-    int i = solution[ii - 1];
-    int j = solution[ii];
+    pheromone_delta_matrix = std::vector<std::vector<double>>(graph->n, std::vector<double>(graph->n, 0.0));
+    for (int ii = 1; ii < solution.size(); ++ii) {
+        int i = solution[ii - 1];
+        int j = solution[ii];
 
-    if (colony->update_strategy == 1) { // ant-quality system
-        pheromone_delta_matrix[i][j] = colony->Q;
-    }
-    else if (colony->update_strategy == 2) { // ant-density system
-        pheromone_delta_matrix[i][j] = colony->Q / graph->cost_matrix[i][j];
-    }
-    else { // ant-cycle system: // wikipedia 
-        pheromone_delta_matrix[i][j] = colony->Q / solution_cost;
+        if (colony->update_strategy == 1) { // ant-quality system
+            pheromone_delta_matrix[i][j] = colony->Q;
+        }
+        else if (colony->update_strategy == 2) { // ant-density system
+            pheromone_delta_matrix[i][j] = colony->Q / graph->cost_matrix[i][j];
+        }
+        else { // ant-cycle system: // wikipedia 
+            pheromone_delta_matrix[i][j] = colony->Q / solution_cost;
+        }
     }
 }
