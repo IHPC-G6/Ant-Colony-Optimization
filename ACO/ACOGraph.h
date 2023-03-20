@@ -10,6 +10,6 @@ class ACOGraph {
         std::vector<std::vector<double>> pheromone_matrix;
 
         ACOGraph(std::vector<std::vector<double>> cost_matrix);
-    };
+};
 
 #endif /* ACOGRAPH_H */

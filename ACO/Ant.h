@@ -8,13 +8,11 @@
 #include <cmath>
 
 class ACO;
-class ACOGraph;
-
 
 class Ant {
     private:
-        ACO* colony;
-        ACOGraph* graph;
+        class ACO* colony;
+        class ACOGraph* graph;
         std::vector<int> allowed_nodes;
         std::vector<std::vector<double>> eta;
         int current_node;
@@ -23,8 +21,11 @@ class Ant {
         std::vector<std::vector<double>> pheromone_delta_matrix;
         double solution_cost;
         std::vector<int> solution;
-        Ant(ACO* colony, ACOGraph* graph);
+
+        Ant(ACO* aco, ACOGraph* g);
+
         int select_next_node();
+
         void update_pheromone_delta_matrix();
 };
 
