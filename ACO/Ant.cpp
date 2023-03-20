@@ -3,8 +3,10 @@
 #include <cmath>
 #include <algorithm>
 
-#include "ACOGraph.h"
+#include "Ant.h"
 #include "ACO.h"
+#include "ACOGraph.h"
+
 
 class Ant {
     private:

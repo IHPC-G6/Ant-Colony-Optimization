@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "MatrixConstructor.H"
+#include "MatrixConstructor.h"
 #include "ACO/ACOGraph.h"
 #include "ACO/ACO.h"
 

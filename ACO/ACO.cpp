@@ -1,6 +1,9 @@
 #include <vector>
-#include "ACOGraph.h"
+
+#include "ACO.h"
 #include "Ant.h"
+#include "ACOGraph.h"
+
 
 class ACO {
     public:
