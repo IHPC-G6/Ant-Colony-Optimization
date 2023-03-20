@@ -3,7 +3,6 @@
 #include <string>
 #include <fstream>
 #include "MatrixConstructor.h"
-#include "ACO/ACOGraph.h"
 #include "ACO/ACO.h"
 
 int main(int argc, char* argv[]) {

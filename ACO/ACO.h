@@ -1,17 +1,44 @@
 #ifndef ACO_H
 #define ACO_H
 
-#include "ACOGraph.h"
-#include "Ant.h"
+#include <vector>
 
-class ACO;
 class ACOGraph;
-class Ant;
+
+class Ant {
+    private:
+        class ACO* colony;
+        class ACOGraph* graph;
+        std::vector<int> allowed_nodes;
+        std::vector<std::vector<double>> eta;
+        int current_node;
+
+    public:
+        std::vector<std::vector<double>> pheromone_delta_matrix;
+        double solution_cost;
+        std::vector<int> solution;
+
+        Ant(class ACO* aco, class ACOGraph* g);
+
+        int select_next_node();
+
+        void update_pheromone_delta();
+
+        void clear();
+};
+
+class ACOGraph {
+    public:
+        std::vector<std::vector<double>> cost_matrix;
+        int n;
+        std::vector<std::vector<double>> pheromone_matrix;
+
+        ACOGraph(std::vector<std::vector<double>> cost_matrix);
+
+        void clear();
+};
 
 class ACO {
-    private:
-        void update_pheromone_matrix(ACOGraph* graph, std::vector<Ant> ants);
-
     public:
         int Q;
         float rho;
@@ -23,7 +50,11 @@ class ACO {
 
         ACO(int ant_count, int iterations, float alpha, float beta, float rho, int q, int strategy);
 
-        std::pair<std::vector<int>, double> solve(ACOGraph* graph);
-    };
+        void update_pheromone_matrix(ACOGraph* graph, std::vector<Ant> ants);
 
-#endif // ACO_H
+        std::pair<std::vector<int>, double> solve(ACOGraph* graph);
+
+        void clear();
+};
+
+#endif  // ACO_H
