@@ -13,9 +13,10 @@ int main(int argc, char* argv[]) {
     cout << n << endl;
     srand(time(NULL));
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+        for (int j = i + 1; j < n; j++) { // i+1 to not visit a combination twice
             int num = (i == j) ? 0 : (rand() % 151 + 50);
             cout << i << " " << j << " " << num << endl;
+            cout << j << " " << i << " " << num << endl; // we print j, i right away
         }
     }
     return 0;
