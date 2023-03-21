@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) { // i+1 to not visit a combination twice
-            int num = (i == j) ? 0 : (rand() % 151 + 50);
+            int num = rand() % 3501 + 100; // between 100 and 3500
             cout << i << " " << j << " " << num << endl;
             cout << j << " " << i << " " << num << endl; // we print j, i right away
         }
