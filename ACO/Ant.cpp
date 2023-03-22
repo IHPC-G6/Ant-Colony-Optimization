@@ -43,7 +43,7 @@ Ant::Ant(ACO* aco, ACOGraph* g) {
     }
     // we generate a seed that depends on both the time and the object memory address
     // now each ant will start in a different node at each execution
-    int seed = static_cast<unsigned>(time(0)) + reinterpret_cast<unsigned>(this);
+    double seed = static_cast<unsigned>(time(0)) + reinterpret_cast<unsigned>(this);
     srand(seed);
     int starting_node = rand() % graph->n; // starting node (city)
     solution.push_back(starting_node); // starting node is added to solution for this ant solution
