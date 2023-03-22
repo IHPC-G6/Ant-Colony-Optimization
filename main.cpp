@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Utils/MatrixConstructor.h"
 #include "ACO/ACO.h"
+#include "MST/MST.h"
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -31,6 +32,10 @@ int main(int argc, char* argv[]) {
     std::cout << result.first[i] << " ";
   }
   std::cout << "\nBest cost: " << result.second << std::endl;
+
+  double MSTCost = primMST(matrix);
+
+  std::cout << "MST cost: " << MSTCost << endl; 
 
   return 0;
 }
