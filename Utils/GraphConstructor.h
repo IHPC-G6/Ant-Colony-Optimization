@@ -1,9 +1,11 @@
 #ifndef GRAPH_CONSTRUCTOR_H
 #define GRAPH_CONSTRUCTOR_H
 
-#include <bits/stdc++.h>
+#include <iostream>
 #include <vector>
 #include <map>
+#include <cmath>
+#include <ctime>
 
 using namespace std;
 
