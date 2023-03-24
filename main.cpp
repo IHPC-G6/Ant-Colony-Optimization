@@ -99,6 +99,11 @@ int main(int argc, char* argv[]) {
   string filename = "Data/random_search_" + to_string(n) + ".txt";
   outfile = fopen(filename.c_str(), "w");
 
+if (outfile == NULL) {
+    cout << "Error opening file." << endl;
+    return 1;
+}
+
   for (int ii = 0; ii < 100; ii++)
   {
 
