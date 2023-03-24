@@ -67,24 +67,26 @@ int Ant::select_next_node() {
     }
 
     // Select next node by probability roulette
+    bool chosen = false;
+    double rand_num = ((double) rand() / (RAND_MAX));
     int selected_node = 0;
-    // Calculate cumulative probabilities
-    std::vector<double> cum_probs(probabilities.size(), 0);
-    for (int i = 0; i < cum_probs.size(); ++i) {
-        cum_probs[i] = (i == 0) ? probabilities[0] : cum_probs[i-1] + probabilities[i];
-    }
-    // Choose a random number between 0 and the sum of probabilities
-    // maybe this can be replaced with just a uniform between 0 and 1 (probs are normalized anyway)
-    double rand_num = ((double) rand() / (RAND_MAX)) * cum_probs.back();
-
-    // Find the index of the node whose cumulative probability range
-    // contains the random number
-    for (int i = 0; i < cum_probs.size(); ++i) {
-        if (rand_num <= cum_probs[i]) {
+    for (int i = 0; i < probabilities.size(); ++i) {
+        rand_num -= probabilities[i]; // not allowed nodes have p=0, so won't contribute and won't be selected
+        if (rand_num < 0) {
             selected_node = i;
+            chosen = true;
             break;
         }
     }
+
+    // in case random roulette fails to choose a node, we select an allowed one randomly
+    if (!chosen) {
+        double seed = static_cast<double>(time(0)) + static_cast<double>(reinterpret_cast<uintptr_t>(this));
+        srand(seed);
+        int idx = rand() % allowed_nodes.size();
+        selected_node = allowed_nodes[idx];
+    }
+
     // Update allowed, solution, ant cost and current city
     allowed_nodes.erase(remove(allowed_nodes.begin(), allowed_nodes.end(), selected_node), allowed_nodes.end());
     solution.push_back(selected_node);
@@ -99,14 +101,14 @@ void Ant::update_pheromone_delta_matrix() {
         int i = solution[ii - 1];
         int j = solution[ii];
 
-        if (colony->update_strategy == 1) { // ant-quality system
+        if (colony->update_strategy == 0) { // ant-cycle system: // wikipedia 
+            pheromone_delta_matrix[i][j] = colony->Q / solution_cost;
+        }
+        else if (colony->update_strategy == 1) { // ant-quality system
             pheromone_delta_matrix[i][j] = colony->Q;
         }
         else if (colony->update_strategy == 2) { // ant-density system
             pheromone_delta_matrix[i][j] = colony->Q / graph->cost_matrix[i][j];
-        }
-        else { // ant-cycle system: // wikipedia 
-            pheromone_delta_matrix[i][j] = colony->Q / solution_cost;
         }
     }
 }
