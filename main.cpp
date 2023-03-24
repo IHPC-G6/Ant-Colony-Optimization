@@ -7,6 +7,7 @@
 #include <ctime>
 #include <limits>
 #include <numeric>
+#include <random>
 #include "Utils/GraphConstructor.h"
 #include "ACO/ACO.h"
 #include "MST/MST.h"
@@ -42,14 +43,16 @@ pair<vector<double>, double> random_search(vector<pair<double, double>> param_ra
     vector<double> best_params;
     double best_objective = numeric_limits<double>::infinity();
     
-    srand(time(NULL)); // seed the random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
     
     for (int i = 0; i < num_iterations; i++) {
         vector<double> params;
         for (int j = 0; j < param_ranges.size(); j++) {
             double range_min = param_ranges[j].first;
             double range_max = param_ranges[j].second;
-            double param = ((double) rand() / RAND_MAX) * (range_max - range_min) + range_min;
+            std::uniform_real_distribution<> dis(range_min, range_max);
+            double param = dis(gen);
             params.push_back(param);
         }
 

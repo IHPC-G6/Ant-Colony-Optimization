@@ -3,6 +3,7 @@
 #include <map>
 #include <cmath>
 #include <ctime>
+#include <random>
 
 using namespace std;
 
@@ -20,12 +21,14 @@ double distance(int pos, int pos_1) {
 pair<vector<vector<double>>, vector<pair<int, int>>> BuildGraph(int n) {
     points.clear(); // needs to be cleared to generate different poins when calling the function within a for loop
     vector<vector<double>> cost_matrix;
-    srand(time(NULL));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0, 2000);
     for (int i = 0; i < n; i++) {
         int x, y;
         while (true) {
-            x = rand() % 2001;
-            y = rand() % 2001;
+            x = dis(gen);
+            y = dis(gen);
             bool check = true;
             if (visit[{x, y}]) continue;
             points.push_back({x, y});
