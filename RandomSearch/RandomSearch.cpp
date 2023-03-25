@@ -8,9 +8,9 @@
 #include <limits>
 #include <numeric>
 #include <random>
-#include "Utils/GraphConstructor.h"
-#include "ACO/ACO.h"
-#include "MST/MST.h"
+#include "../Utils/GraphConstructor.h"
+#include "../ACO/ACO.h"
+#include "../MST/MST.h"
 
 using namespace std;
 
@@ -96,13 +96,13 @@ int main(int argc, char* argv[]) {
   int n = atoi(argv[1]);
 
   FILE *outfile;
-  string filename = "Data/random_search_" + to_string(n) + ".txt";
+  string filename = "random_search_" + to_string(n) + ".txt";
   outfile = fopen(filename.c_str(), "w");
 
-if (outfile == NULL) {
-    cout << "Error opening file." << endl;
-    return 1;
-}
+  if (outfile == NULL) {
+      cout << "Error opening file." << endl;
+      return 1;
+  }
 
   for (int ii = 0; ii < 100; ii++)
   {

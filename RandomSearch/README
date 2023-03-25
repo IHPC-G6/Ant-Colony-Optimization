@@ -1,0 +1,15 @@
+To compile from this directory use:
+
+g++ -o RandomSearch RandomSearch.cpp ../ACO/ACOGraph.cpp ../ACO/ACO.cpp ../ACO/Ant.cpp ../Utils/GraphConstructor.cpp ../MST/MST.cpp
+
+If you use Linux, run:
+
+./RandomSearch 5
+
+If you use Windows, run:
+
+RandomSearch.exe 5
+
+PLEASE AVOID RUNNING THE PROGRAM WITH n = 30, 40, 50 TO NOT OVERWRITE WHAT WAS ALREADY DONE.
+
+USE n = 5 FOR TESTING
