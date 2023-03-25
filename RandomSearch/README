@@ -1,6 +1,6 @@
 To compile from this directory use:
 
-g++ -o RandomSearch RandomSearch.cpp ../ACO/ACOGraph.cpp ../ACO/ACO.cpp ../ACO/Ant.cpp ../Utils/GraphConstructor.cpp ../MST/MST.cpp
+g++ -o RandomSearch RandomSearch.cpp ../ACO/ACOGraph.cpp ../ACO/ACO.cpp ../ACO/Ant.cpp ../Utils/GraphConstructor.cpp ../MST/MST.cpp ../MST/OneTree.cpp
 
 If you use Linux, run:
 
