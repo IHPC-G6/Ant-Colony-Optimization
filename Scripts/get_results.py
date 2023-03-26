@@ -17,7 +17,7 @@ def plot_cost_dist(aco_costs, one_tree_cost):
     plt.xlabel('Cost')
     plt.title('Cost Distribution Plot')
     plt.legend()
-    plt.savefig(f'..Results/cost_distribution_{n}_{exp}.pdf', format='pdf')p
+    plt.savefig(f'Results/cost_distribution_{n}_{exp}.pdf', format='pdf')
 
 def plot_cost_line(aco_costs, one_tree_cost):
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -27,7 +27,7 @@ def plot_cost_line(aco_costs, one_tree_cost):
     plt.plot([], [], '.', color='palegoldenrod', label=f'Min. ACO Cost: ${np.min(aco_costs):.2f}$')
     plt.title('Cost Scatter Plot')
     plt.legend(loc='center right')
-    plt.savefig(f'..Results/cost_scatter_plot_{n}_{exp}.pdf', format='pdf')
+    plt.savefig(f'Results/cost_scatter_plot_{n}_{exp}.pdf', format='pdf')
 
 def plot_dist(aco_costs, one_tree_cost):
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -38,10 +38,10 @@ def plot_dist(aco_costs, one_tree_cost):
     plt.xlabel('Performance Rate')
     plt.ylabel('Count')
     plt.legend()
-    plt.savefig(f'..Results/performance_distribution_{n}_{exp}.pdf', format='pdf')
+    plt.savefig(f'Results/performance_distribution_{n}_{exp}.pdf', format='pdf')
 
 # Open the file for reading
-with open(f"../Data/graph_{n}_{exp}.txt", "r") as file:
+with open(f"Data/graphs/graph_{n}_{exp}.txt", "r") as file:
     # Read the first four lines of the file
     n = int(file.readline())
     mst_cost = float(file.readline())
@@ -59,14 +59,14 @@ with open(f"../Data/graph_{n}_{exp}.txt", "r") as file:
         points.append((x, y))
 
 aco_costs = []
-with open(f'../Data/costs_{n}_{exp}.txt', 'r') as f:
+with open(f'Data/costs/costs_{n}_{exp}.txt', 'r') as f:
     # Read each line and store the numbers in a list
     aco_costs = [float(line.strip()) for line in f]
 
 
 paths = []
 
-with open(f'../Data/paths_{n}_{exp}.txt', 'r') as f:
+with open(f'Data/paths/paths_{n}_{exp}.txt', 'r') as f:
     # Read each line and split the numbers
     lines = [line.strip().split() for line in f]
     for line in lines:
@@ -126,4 +126,4 @@ edge_labels = nx.get_edge_attributes(best_path, 'weight')
 edge_labels = { k : f'{v:.2f}' for k, v in edge_labels.items() }
 nx.draw_networkx_edge_labels(best_path, pos, edge_labels=edge_labels, font_size=8, bbox=dict(facecolor='beige', edgecolor='none'))
 plt.title('Best Solution', fontdict={'fontsize': 20})
-plt.savefig(f'..Results/solution_{n}_{exp}.pdf', format='pdf')
+plt.savefig(f'Results/solution_{n}_{exp}.pdf', format='pdf')
