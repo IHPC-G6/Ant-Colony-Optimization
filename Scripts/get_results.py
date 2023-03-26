@@ -15,7 +15,7 @@ def plot_cost_dist(aco_costs, one_tree_cost):
     ax.axvline(x=one_tree_cost, color='lightseagreen', linestyle='--', label=f'1-Tree Cost: ${one_tree_cost:.2f}$')
     plt.plot([], [], '.', color='palegoldenrod', label=f'ACO Cost STD: ${np.std(aco_costs):.4f}$')
     plt.xlabel('Cost')
-    plt.title('Cost Distribution Plot: {n} nodes, {exp} experiments')
+    plt.title(f'Cost Distribution Plot: {n} nodes, {exp} experiments')
     plt.legend()
     plt.savefig(f'Results/cost_distribution_{n}_{exp}.pdf', format='pdf')
 
@@ -25,7 +25,7 @@ def plot_cost_line(aco_costs, one_tree_cost):
     ax.hlines(y=np.mean(aco_costs), xmin=0, xmax=100, color='tomato', linestyle='-', label=f'ACO Cost Mean: ${np.mean(aco_costs):.2f}$')
     ax.hlines(y=one_tree_cost, xmin=0, xmax=100, color='lightseagreen', linestyle='-', label=f'1-Tree Cost: ${one_tree_cost:.2f}$')
     plt.plot([], [], '.', color='palegoldenrod', label=f'Min. ACO Cost: ${np.min(aco_costs):.2f}$')
-    plt.title('Cost Scatter Plot: {n} nodes, {exp} experiments')
+    plt.title(f'Cost Scatter Plot: {n} nodes, {exp} experiments')
     plt.legend(loc='center right')
     plt.savefig(f'Results/cost_scatter_plot_{n}_{exp}.pdf', format='pdf')
 
@@ -34,7 +34,7 @@ def plot_dist(aco_costs, one_tree_cost):
     sns.histplot(aco_costs/one_tree_cost, kde=True, bins=10)
     ax.axvline(x=np.mean(aco_costs/one_tree_cost), linestyle='--', label=f'Avg. Performance: ${np.mean(aco_costs/one_tree_cost):.6f}$')
     ax.axvline(x=np.min(aco_costs/one_tree_cost), color='darkmagenta', linestyle='--', label=f'Best Performance: ${np.min(aco_costs/one_tree_cost):.6f}$')
-    plt.title('1-Tree Performance Distribution: {n} nodes, {exp} experiments')
+    plt.title(f'1-Tree Performance Distribution: {n} nodes, {exp} experiments')
     plt.xlabel('Performance Rate')
     plt.ylabel('Count')
     plt.legend()
