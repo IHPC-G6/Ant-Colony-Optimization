@@ -1,0 +1,360 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Optimización de parámetros del algoritmo ACO mediante búsqueda aleatoria para encontrar soluciones parciales al problema del agente viajero (TSP) en grafos de hasta 50 nodos\\
+
+}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Daniel Santiago Silva Capera}
+\IEEEauthorblockA{\textit{Ingeniería de Sistemas y Computación} \\
+\textit{Universidad Nacional de Colombia}\\
+Bogotá D.C, Colombia\\
+dasilvaca@unal.edu.co}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Jonathan Steven Ochoa Celis}
+\IEEEauthorblockA{\textit{Ingeniería de Sistemas y Computación} \\
+\textit{Universidad Nacional de Colombia}\\
+Bogotá D.C, Colombia\\
+jsochoac@unal.edu.co}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Cesar Esteban Diaz Medina}
+\IEEEauthorblockA{\textit{Ingeniería de Sistemas y Computación} \\
+\textit{Universidad Nacional de Colombia}\\
+Bogotá D.C, Colombia\\
+cediazme@unal.edu.co}
+\and
+\IEEEauthorblockN{4\textsuperscript{th} Victor Manuel Davila Castaneda}
+\IEEEauthorblockA{\textit{Ingeniería mecatronica} \\
+\textit{Universidad Nacional de Colombia}\\
+Bogotá D.C, Colombia \\
+vdavila@unal.edu.co}
+\and
+\IEEEauthorblockN{5\textsuperscript{th} Diego Esteban Quintero Rey}
+\IEEEauthorblockA{\textit{Ingeniería de Sistemas y Computación} \\
+\textit{Universidad Nacional de Colombia}\\
+Bogotá D.C, Colombia\\
+diquintero@unal.edu.co}
+\and
+\IEEEauthorblockN{6\textsuperscript{th} Nicolas David Contreras Ramirez}
+\IEEEauthorblockA{\textit{Ingeniería de Sistemas y Computación} \\
+\textit{Universidad Nacional de Colombia}\\
+Bogotá D.C, Colombia \\
+ndcontrerasr@unal.edu.co}
+}
+
+\maketitle
+
+\begin{abstract}
+This document is a model and instructions for \LaTeX.
+This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
+or Math in Paper Title or Abstract.
+\end{abstract}
+
+\begin{IEEEkeywords}
+component, formatting, style, styling, insert
+\end{IEEEkeywords}
+
+\section{Introducción}
+This document is a model and instructions for \LaTeX.
+Please observe the conference page limits. 
+
+\section{Descripción del problema}
+
+El Problema del Agente Viajero (Traveling Salesman Problem, TSP), definido de la forma más simple posible, consiste en un vendedor que desea pasar por n ciudades, de las cuales se conoce su posición y por ende la distancia entre ellas, tal que solo pase por cada una de ellas, de la manera más óptima posible, y retorne a su posición inicial. Este problema es aplicable en múltiples campos, tales como, logística, planeación, fabricación de circuitos electrónicos entre otros.
+
+ En el problema se presentan N! rutas posibles, aunque se puede simplificar ya que dada una ruta nos da igual el punto de partida y esto reduce el número de rutas a examinar en un factor N quedando (N-1)!. Como no importa la dirección en que se desplace el viajante, el número de rutas a examinar se reduce nuevamente en un factor 2. Por lo tanto, hay que considerar (N-1)!/2 rutas posibles.
+
+ Para solucionar este problema se decidió usar el algoritmo de la colonia de hormigas (Ant Colony Optimization), el cual se describirá en la siguiente sección, el cual genera el camino óptimo para el número de nodos dado en cada caso y se realiza su respectiva gráfica mostrando este camino y los demás caminos posibles. 
+
+\section {Objetivos}
+Optimizar el rendimiento del algoritmo ACO para encontrar soluciones parciales al problema del agente viajero (TSP) en grafos de tamaño variable mediante la definición de rangos óptimos de parámetros.
+\subsection{Objetivos específicos}
+\begin{itemize}
+\item Implementar el algoritmo ACO en C++.
+\item Construir un generador de grafos aleatorios de tamaño $n$ en el cada nodo esté definido por sus coordenadas cartesianas.
+\item Optimizar los parámetros con búsqueda aleatoria para los tamaños de grafo $n=10, 20, 30, 40, 50$.
+\item Definir rangos óptimos de los parámetros a partir del análisis de matrices de correlación, gráficos de dispersión y de distribución.
+\item Construir un programa en C++ que utilice los rangos de parámetros definidos según el tamaño del grafo.
+\item Realizar experimentos con el programa implementado y generar gráficas para visualizar la solución y el desempeño del algoritmo.
+\end{itemize}
+\section {Metodología}
+\subsection{Implementación del algoritmo ACO}
+El algoritmo ACO se implementó en C++, tomando como referencia una implementación existente en Python disponible en \url{https://github.com/ppoffice/ant-colony-tsp}. Se clonó este repositorio y se revisó línea por línea, verificando la correctitud y que las fórmulas coincidieran con la bibliografía consultada. Se hicieron unos ajustes a esta versión en Python para que fuera más clara y eficiente y se procedió a traducir el código a C++.
+El código en C++ se modularizó en tres clases:
+\begin{itemize}
+\item ACO: Clase que incluye métodos para actualizar la matriz de feromonas de la colonia y solucionar el problema del TSP mediante instanciación de hormigas que recorren el grafo en cada iteración, actualizando la matriz de feromonas y llevando registro de la mejor solución encontrada hasta el momento.
+\item ACO Graph: Clase que representa el grafo del problema mediante una matriz de distancias y una matriz de feromonas.
+\item Ant: Clase que representa la unidad básica del algoritmo ACO, implementando los métodos de selección del siguiente nodo y variabilidad de la intensidad de feromonas dispersadas en cada paso.
+\end{itemize}
+\subsection{Construcción del generador de grafos}
+Se creó un programa que recibe el tamaño n del grafo como parámetro y genera las coordenadas cartesianas de los nodos utilizando un generador de números aleatorios con distribución uniforme. Se garantiza que los nodos estén separados por al menos 100 unidades y se calculan las distancias entre ellos para generar una matriz de distancias utilizada en ACO Graph. El programa también devuelve una lista de puntos que se utiliza para graficar el grafo con las librerías NetworkX y Matplotlib de Python al final del proceso.
+\subsection{Optimización de parámetros con búsqueda aleatoria}
+Se creó un programa que emplea el generador de grafos y el algoritmo ACO para optimizar parámetros por medio de búsqueda aleatoria en cinco tamaños de grafo: $n=10,20,30,40,50$. Los parámetros optimizados fueron: número de hormigas, número de iteraciones, coeficientes Alpha ($\alpha$), Beta ($\beta$), Rho ($\rho$), y la intensidad ($Q$) de la feromona dispersada. Para cada uno de los $100$ grafos generados por tamaño, se ejecutó el algoritmo ACO $30$ veces para registrar el mejor resultado y los parámetros utilizados. Luego se realizaron $30$ ejecuciones adicionales para cada grafo utilizando los parámetros óptimos, y se calculó la media y desviación estándar de los costos obtenidos. Los resultados y parámetros se informan en un dataset de $100$ filas para cada tamaño de grafo. Todos los experimentos se realizaron remotamente en una sala de física habilitada para el curso.
+\subsection{Definición de rangos óptimos de parámetros}
+Se llevó a cabo un análisis en Python mediante la visualización de matrices de correlación y gráficos de dispersión y distribución. El proceso consistió en lo siguiente:
+\begin{itemize}
+\item Para cada tamaño de grafo, se calculó una matriz de correlación a partir del conjunto de datos construido con los parámetros y la variable objetivo. En este caso, la variable objetivo es el costo medio obtenido de los experimentos para cada grafo. Además, se incluyó la desviación estándar para examinar la relación de los parámetros con esta métrica que puede indicar si favorecen o no la convergencia de la solución.
+\item Se estableció un umbral arbitrario de correlación de magnitud mayor a 0.15 para seleccionar los parámetros más importantes en la minimización del costo. A continuación, se utilizó una técnica de agrupación de histogramas (histogram binning) para determinar los intervalos de valores donde el costo promedio es menor. Para ello, se dividió el dataset en 10 subintervalos en función del valor mínimo y máximo del parámetro en cuestión. Luego, se calculó el valor medio de la variable objetivo para cada subintervalo. El intervalo con la media más baja de la variable objetivo fue seleccionado como el rango óptimo.
+\item Para aquellos parámetros que no presentaban una correlación significativa con el costo pero sí con la desviación estándar, se recurrió a la observación visual de gráficos de dispersión y distribución para determinar qué rangos serían más adecuados.
+\item Finalmente, para los parámetros restantes, se establecieron los siguientes rangos, donde $n$ es el tamaño del grafo:
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|l|c|c|}
+    \hline
+    Parámetro & Min 1 & Max 2 \\
+    \hline
+    Hormigas & $5$ & $5n$ \\
+    \hline
+    Iteraciones & $0.5n$ & $0.5n + 100$ \\
+    \hline
+    Alpha ($\alpha$) & 0.5 & 2.0 \\
+    \hline
+    Beta($\beta$) & 1.0 & 5.0 \\
+    \hline
+    Rho ($\rho$) & 0.1 & 0.9 \\
+    \hline
+    Intensidad ($Q$) & $1$ & $10$ \\
+    \hline
+  \end{tabular}
+  \caption{Parámetros por defecto}
+  \label{tab:table1}
+\end{table}
+\end{itemize}
+\subsection{Desarrollo del programa en C++ que utiliza los rangos definidos para los parámetros}
+Definidos los parámetros, se construyó se construyó un programa en C++ que contiene una tabla (matriz) con estos valores. 
+El programa requiere dos parámetros de entrada: el tamaño $n$ del grafo y el número de experimentos a realizar. Al recibir estos parámetros, el programa genera un grafo aleatorio de tamaño $n$ utilizando el generador de grafos. A continuación, inicializa una instancia de ACO con los parámetros óptimos correspondientes. Para seleccionar los parámetros, se utiliza la siguiente regla: si $n <= 10$, se utilizan los valores definidos para $n=10$; si $10 < n <= 20$, se utilizan los valores definidos para $n=20$, y así sucesivamente hasta $n=50$. Si $n>50$, se utilizan los valores definidos para $n=50$.
+El programa ejecuta el número de experimentos definido por el usuario, utilizando el mismo grafo y los mismos parámetros. Se generan tres archivos de texto: uno que contiene información general como el tamaño del grafo, la cota inferior calculada con el algoritmo de 1-Tree, los parámetros utilizados y las coordenadas cartesianas de los nodos; otro archivo que contiene los costos obtenidos en cada experimento; y un tercer archivo que contiene los caminos de las soluciones encontradas, uno por cada experimento.
+El algoritmo de 1-Tree funciona de la siguiente manera: Se hacen $n$ iteraciones. En cada iteración se retira un nodo distinto del grafo. Para este grafo con $n-1$ nodos, se obtiene el MST con su costo. Luego, se añade el nodo retirado y se une a sus dos nodos más cercanos. Al costo obtenido se le suma el costo de estos dos nuevos enlaces. En cada iteración se va llevando registro de este costo, y al final se entrega el mayor de todos. Esa es la cota inferior más cercana a la solución real del problema de TSP, y permite comparar el desempeño del algoritmo ACO.
+\subsection{Generación de gráficas y análisis del desempeño}
+Al final de todo el proceso, un script de Python lee los archivos generados, y genera las siguientes gráficas:
+\begin{itemize}
+\item Distribución y dispersión de costos obtenidos comparada con la cota inferior
+\item Distribución de la tasa de desempeño
+\item Grafo con el camino de la mejor solución resaltado
+\end{itemize}
+
+\section{Resultados}
+En las Figuras [ FIGURA ] se muestran las matrices de correlación obtenidas para $n=40,50$. Las matrices de correlación para los demás valores de $n$ pueden encontrarse en el repositorio del proyecto disponible en \url{https://github.com/IHPC-G6/Ant-Colony-Optimization} . En estas matrices, solo se prestó atención a las filas y columnas correspondientes a la variable objetivo (costo medio) y a la desviación estándar del costo.
+
+    \begin{figure}[htbp]
+      \centering
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/mc_40.png}
+        \caption{Matriz de Correlación para $n=40$}
+        \label{fig:image29}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/mc_50.png}
+        \caption{Matriz de Correlación para $n=50$}
+        \label{fig:image30}
+      \end{minipage}
+    \end{figure}
+
+En la tabla [TABLA] se presentan los resultados de la correlación de cada parámetro con respecto al costo medio (variable objetivo). Solo se muestran los valores cuya magnitud es mayor o igual a $0.15$. Para aquellos parámetros que presentaron una correlación sobre este umbral, se aplicó la técnica de histogram binning, y los resultados se resumen en la tabla [TABLA].
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Parámetro & $n=10$ & $n=20$ & $n=30$ & $n=40$ & $n=50$ \\
+\hline
+Hormigas & -- & -- & -- & $-0.17$ & -- \\
+\hline
+Iteraciones & $0.18$ & -- & -- & $-0.19$ & $-0.27$ \\
+\hline
+Alpha ($\alpha$) & -- & $0.29$ & $0.46$ & $0.45$ & $0.30$ \\
+\hline
+Beta ($\beta$) & $-0.38$ & $-0.17$ & $-0.25$ & $-0.23$ & $-0.38$ \\
+\hline
+\end{tabular}
+\caption{Correlación entre los parámetros y el costo medio para distintos valores de $n$}
+\label{tab:table2}
+\end{table}
+
+\begin{table}[h]
+\centering
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Parámetro & $n=10$ & $n=20$ & $n=30$ & $n=40$ & $n=50$ \\
+\hline
+Hormigas & -- & -- & -- & $(167.8, 182.9)$ & -- \\
+\hline
+Iter. & $(7.0, 16.7)$ & -- & -- & $(89.6, 99.4)$ & $(84.4, 94.3)$ \\
+\hline
+Alpha ($\alpha$) & -- & $(0.51, 0.65)$ & $(0.50, 0.65)$ & $(0.51, 0.65)$ & $(0.65, 0.80)$ \\
+\hline
+Beta ($\beta$) & $(4.59, 4.99)$ & $(3.79, 4.19)$ & $(3.48, 3.85)$ & $(4.16, 4.54)$ & $(4.58, 4.96)$ \\
+\hline
+\end{tabular}
+\caption{Rangos óptimos de parámetros calculados visualmente}
+\label{tab:table2}
+\end{table}
+
+En el caso de los parámetros que no mostraron una correlación sobre este umbral con respecto al costo medio, pero sí con la desviación estándar, se realizó un análisis visual mediante la observación de los diagramas de distribución y dispersión. Los valores de correlación obtenidos para estos parámetros se resumen en la tabla [TABLA].
+
+\begin{table}[h]
+  \centering
+  \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|}
+      \hline
+      Parámetro & $n=10$ & $n=30$ & $n=50$ \\
+      \hline
+      Hormigas & -- & $-0.20$ & $-0.16$ \\
+      \hline
+      Rho ($\rho$) & $0.19$ & $-0.21$ & -- \\
+      \hline
+      Intensidad ($Q$) & $0.19$ & -- & $-0.21$ \\
+      \hline
+    \end{tabular}
+  }
+  \caption{Correlaciones de parámetros con la desviación estándar del costo}
+  \label{tab:table1}
+\end{table}
+
+En las figuras [ FIGURAS ] hay un ejemplo de los diagramas de dispersión y de distribución que se usaron para definir el rango de hormigas para $n=30$ por simple observación.
+
+    \begin{figure}[htbp]
+      \centering
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/ant_scatter_30.png}
+        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
+        \label{fig:image29}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/ant_dist_30.png}
+        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
+        \label{fig:image30}
+      \end{minipage}
+    \end{figure}
+Para los parámetros restantes, se usaron los rangos por defecto presentados en la Tabla 1.
+\begin{table}[h]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|c|c|c|}
+\hline
+Parámetro & n=10 & n=30 & n=50 \\
+\hline
+Hormigas & -- & (140, 150) & (150, 225) \\
+\hline
+Rho & (0.3, 0.8) & (0.5, 0.8) & -- \\
+\hline
+Intensidad & (1, 7) & -- & (4, 9) \\
+\hline
+\end{tabular}
+}
+\caption{Detalles de parámetros}
+\label{tab:table3}
+\end{table}
+El desempeño del algoritmo con respecto a la cota inferior del algoritmo 1-Tree mostró mejoras tras la optimización de los parámetros. En las figuras [ FIGURAS ] se presentan las distribuciones de esta métrica antes y después de la optimización para los casos $n=40, 50$. Los datos de antes de la optimización fueron los recolectados durante la búsqueda aleatoria, mientras que los datos de después de la optimización corresponden a la ejecución de los experimentos con los parámetros ya definidos. Se observa que tras la optimización, no se obtienen tasas mayores a $1.20$ y para el caso de $40$ nodos, todos los resultados estuvieron por debajo de $1.10$.
+
+    \begin{figure}[htbp]
+      \centering
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/rs_performance_40.png}
+        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
+        \label{fig:image29}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/final_performance_40.png}
+        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
+        \label{fig:image30}
+      \end{minipage}
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/rs_performance_50.png}
+        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
+        \label{fig:image29}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/final_performance_50.png}
+        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
+        \label{fig:image30}
+      \end{minipage}
+    \end{figure}
+
+La tasa de desempeño se calcula con la fórmula:
+\begin{equation}
+    \text{Tasa de Desempeño} = \frac{\text{costo de ACO}}{\text{cota inferior de 1-Tree}}
+\end{equation}
+Un resultado aceptable es entre $1.05$ y $1.20$.
+
+Las figuras [ FIGURAS ] muestran las mejores soluciones obtenidas para $n=40, 50$ en una ejecución de 100 experimentos. Los parámetros utilizados se encuentran en cada figura.
+
+    \begin{figure}[htbp]
+      \centering
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/solution_40.png}
+        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
+        \label{fig:image29}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/solution_50.png}
+        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
+        \label{fig:image30}
+      \end{minipage}
+    \end{figure}
+
+\section{Conclusiones}
+\section{Próximos pasos}
+
+\section*{References}
+
+Please number citations consecutively within brackets \cite{b1}. The 
+sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
+number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
+the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
+
+Number footnotes separately in superscripts. Place the actual footnote at 
+the bottom of the column in which it was cited. Do not put footnotes in the 
+abstract or reference list. Use letters for table footnotes.
+
+Unless there are six authors or more give all authors' names; do not use 
+``et al.''. Papers that have not been published, even if they have been 
+submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
+that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
+Capitalize only the first word in a paper title, except for proper nouns and 
+element symbols.
+
+For papers published in translation journals, please give the English 
+citation first, followed by the original foreign-language citation \cite{b6}.
+
+\begin{thebibliography}{00}
+\bibitem{b1} Yang, J., Shi, X., Marchese, M., & Liang, Y. (2008). An ant colony optimization method for generalized TSP problem. Progress in Natural Science, 18(11), 1417-1422. https://doi.org/10.1016/j.pnsc.2008.03.028
+\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
+\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
+\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
+\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
+\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
+\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+\end{thebibliography}
+\vspace{12pt}
+\color{red}
+IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+
+\end{document}
