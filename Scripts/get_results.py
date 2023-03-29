@@ -106,7 +106,7 @@ for i in range(n_nodes):
     for j in range(i+1, n_nodes):
         G.add_edge(i, j)
 
-best_path = nx.Graph()
+best_path = nx.DiGraph()
 best_path.add_edges_from(best_path_edges)
 
 for u, v in best_path.edges():
@@ -119,11 +119,11 @@ node_color = ['orangered' if i == best_path_start_node else 'deepskyblue' for i 
 fig = plt.figure(figsize=(18, 12))
 nx.draw_networkx_nodes(G, pos=pos, node_size=800, node_color=node_color, linewidths=0.3, edgecolors='black')
 nx.draw_networkx_edges(G, pos, alpha=0.500, edge_color='turquoise')
-nx.draw_networkx_edges(best_path, pos=pos, edge_color='crimson')
-labels = { i : f'{i}: {int(p[0]), int(p[1])}' for i, p in enumerate(nodes) }
+nx.draw_networkx_edges(best_path, pos=pos, edge_color='crimson', width=2, arrows=True, arrowsize=20)
+labels = { i : f'{i}\n{int(p[0]), int(p[1])}' for i, p in enumerate(nodes) }
 nx.draw_networkx_labels(G, pos, font_color='black', font_size=10, labels=labels)
 edge_labels = nx.get_edge_attributes(best_path, 'weight')
 edge_labels = { k : f'{v:.2f}' for k, v in edge_labels.items() }
 nx.draw_networkx_edge_labels(best_path, pos, edge_labels=edge_labels, font_size=8, bbox=dict(facecolor='beige', edgecolor='none'))
-plt.title(f'Best Solution: {n} nodes, {exp} experiments, Performance: {np.min(aco_costs/one_tree_cost):.6f}', fontdict={'fontsize': 20})
+plt.title(f'Best Solution: {n} nodes, {exp} experiments, Performance: {np.min(aco_costs/one_tree_cost):.6f} \n Parameters: Ant Count={int(params[0])}, Iterations={int(params[1])}, Alpha={params[2]:.2f}, Beta={params[3]:.2f}, Rho={params[4]:.2f}, Q={params[5]}', fontdict={'fontsize': 20})
 plt.savefig(f'Results/solution_{n}_{exp}.pdf', format='pdf')
