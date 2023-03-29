@@ -99,14 +99,25 @@ El código en C++ se modularizó en tres clases:
 \subsection{Construcción del generador de grafos}
 Se creó un programa que recibe el tamaño n del grafo como parámetro y genera las coordenadas cartesianas de los nodos utilizando un generador de números aleatorios con distribución uniforme. Se garantiza que los nodos estén separados por al menos 100 unidades y se calculan las distancias entre ellos para generar una matriz de distancias utilizada en ACO Graph. El programa también devuelve una lista de puntos que se utiliza para graficar el grafo con las librerías NetworkX y Matplotlib de Python al final del proceso.
 \subsection{Optimización de parámetros con búsqueda aleatoria}
-Se creó un programa que emplea el generador de grafos y el algoritmo ACO para optimizar parámetros por medio de búsqueda aleatoria en cinco tamaños de grafo: $n=10,20,30,40,50$. Los parámetros optimizados fueron: número de hormigas, número de iteraciones, coeficientes Alpha ($\alpha$), Beta ($\beta$), Rho ($\rho$), y la intensidad ($Q$) de la feromona dispersada. Para cada uno de los $100$ grafos generados por tamaño, se ejecutó el algoritmo ACO $30$ veces para registrar el mejor resultado y los parámetros utilizados. Luego se realizaron $30$ ejecuciones adicionales para cada grafo utilizando los parámetros óptimos, y se calculó la media y desviación estándar de los costos obtenidos. Los resultados y parámetros se informan en un dataset de $100$ filas para cada tamaño de grafo. Todos los experimentos se realizaron remotamente en una sala de física habilitada para el curso.
+Se creó un programa que emplea el generador de grafos y el algoritmo ACO para optimizar parámetros por medio de búsqueda aleatoria en cinco tamaños de grafo: $n=10,20,30,40,50$. Los parámetros optimizados fueron: número de hormigas, número de iteraciones, coeficientes Alpha ($\alpha$), Beta ($\beta$), Rho ($\rho$), y la intensidad ($Q$) de la feromona dispersada. A continuación, una breve definición para cada uno:
+
+\begin{itemize}
+\item Número de hormigas: cantidad de agentes que recorren el grafo. Cada hormiga sigue una ruta diferente y en cada iteración se actualizan las feromonas de acuerdo a la calidad de la ruta.
+\item Iteraciones: número de veces que se ejecuta el algoritmo. Puede verse como generaciones de hormigas. En cada iteración, se instancia un nuevo conjunto de hormigas, pero la matriz de feromonas de la colonia sigue siendo la misma, por lo que con cada iteración, se converge un poco más a la solución.
+\item Alpha ($\alpha$): representa la importancia relativa de la feromona al decidir cuál será el próximo nodo. Si es alto, la hormiga le dará más importancia a la cantidad de feromona en esa arista que a la distancia. Favorece la exploración, es decir, buscar nuevas soluciones en regiones inexplorados.
+\item Beta ($\beta$): representa la importancia relativa de la heurística (la distancia en este caso) al decidir cuál será el próximo nodo. Si es alto, la hormiga le dará más importancia a la distancia y que a la cantidad de feromona en esa arista. Favorece la explotación, es decir, refinar soluciones ya existentes para intentar mejorarlas.
+\item Rho ($\rho$): tasa de evaporación de las feromonas. Controla la rapidez con la que las feromonas se desvanecen con el tiempo. Un $\rho$ mayor es una evaporación más rápida al final de cada iteración, por lo que la siguiente generación de hormigas, empieza con menos información.
+\item Intensidad ($Q$): se utiliza para actualizar la cantidad de feromonas depositadas por las hormigas en las aristas del grafo. Una vez que una hormiga ha completado su recorrido, se utiliza la intensidad para calcular cuánta feromona debe depositar en las aristas que ha recorrido. En este proyecto se utilizó la estrategia cycle-system, que consiste en incrementar el nivel de feromonas al final de cada recorrido por un factor de $Q/C_{\text{ant}}$ donde $C_{\text{ant}}$ es el costo del recorrido de la hormiga. A menor costo, se incrementa más el nivel de feromonas. Como $Q$ es el mismo para todas las hormigas, no es determinante que valor se use.
+\end{itemize}
+
+Para cada uno de los $100$ grafos generados por tamaño, se ejecutó el algoritmo ACO $30$ veces para registrar el mejor resultado y los parámetros utilizados. Luego se realizaron $30$ ejecuciones adicionales para cada grafo utilizando los parámetros óptimos, y se calculó la media y desviación estándar de los costos obtenidos. Los resultados y parámetros se informan en un dataset de $100$ filas para cada tamaño de grafo. Todos los experimentos se realizaron remotamente en una sala de física habilitada para el curso.
 \subsection{Definición de rangos óptimos de parámetros}
 Se llevó a cabo un análisis en Python mediante la visualización de matrices de correlación y gráficos de dispersión y distribución. El proceso consistió en lo siguiente:
 \begin{itemize}
 \item Para cada tamaño de grafo, se calculó una matriz de correlación a partir del conjunto de datos construido con los parámetros y la variable objetivo. En este caso, la variable objetivo es el costo medio obtenido de los experimentos para cada grafo. Además, se incluyó la desviación estándar para examinar la relación de los parámetros con esta métrica que puede indicar si favorecen o no la convergencia de la solución.
 \item Se estableció un umbral arbitrario de correlación de magnitud mayor a 0.15 para seleccionar los parámetros más importantes en la minimización del costo. A continuación, se utilizó una técnica de agrupación de histogramas (histogram binning) para determinar los intervalos de valores donde el costo promedio es menor. Para ello, se dividió el dataset en 10 subintervalos en función del valor mínimo y máximo del parámetro en cuestión. Luego, se calculó el valor medio de la variable objetivo para cada subintervalo. El intervalo con la media más baja de la variable objetivo fue seleccionado como el rango óptimo.
 \item Para aquellos parámetros que no presentaban una correlación significativa con el costo pero sí con la desviación estándar, se recurrió a la observación visual de gráficos de dispersión y distribución para determinar qué rangos serían más adecuados.
-\item Finalmente, para los parámetros restantes, se establecieron los siguientes rangos, donde $n$ es el tamaño del grafo:
+\item Finalmente, para los parámetros restantes, se establecieron los rangos presentados en la Tabla I, donde $n$ es el tamaño del grafo.
 
 \begin{table}[h]
   \centering
@@ -145,7 +156,7 @@ Al final de todo el proceso, un script de Python lee los archivos generados, y g
 \end{itemize}
 
 \section{Resultados}
-En las Figuras [ FIGURA ] se muestran las matrices de correlación obtenidas para $n=40,50$. Las matrices de correlación para los demás valores de $n$ pueden encontrarse en el repositorio del proyecto disponible en \url{https://github.com/IHPC-G6/Ant-Colony-Optimization} . En estas matrices, solo se prestó atención a las filas y columnas correspondientes a la variable objetivo (costo medio) y a la desviación estándar del costo.
+En las Figuras 1 Y 2 se muestran las matrices de correlación obtenidas para $n=40,50$. Las matrices de correlación para los demás valores de $n$, así como las demás gráficas generadas que no se incluyen en este reporte, pueden encontrarse en el repositorio del proyecto disponible en \url{https://github.com/IHPC-G6/Ant-Colony-Optimization} . En estas matrices, solo se prestó atención a las filas y columnas correspondientes a la variable objetivo (costo medio) y a la desviación estándar del costo.
 
     \begin{figure}[htbp]
       \centering
@@ -164,7 +175,7 @@ En las Figuras [ FIGURA ] se muestran las matrices de correlación obtenidas par
       \end{minipage}
     \end{figure}
 
-En la tabla [TABLA] se presentan los resultados de la correlación de cada parámetro con respecto al costo medio (variable objetivo). Solo se muestran los valores cuya magnitud es mayor o igual a $0.15$. Para aquellos parámetros que presentaron una correlación sobre este umbral, se aplicó la técnica de histogram binning, y los resultados se resumen en la tabla [TABLA].
+En la Tabla II se presentan los resultados de la correlación de cada parámetro con respecto al costo medio (variable objetivo). Solo se muestran los valores cuya magnitud es mayor o igual a $0.15$. Para aquellos parámetros que presentaron una correlación sobre este umbral, se aplicó la técnica de histogram binning, y los resultados se resumen en la Tabla III.
 
 \begin{table}[h]
 \centering
@@ -205,7 +216,7 @@ Beta ($\beta$) & $(4.59, 4.99)$ & $(3.79, 4.19)$ & $(3.48, 3.85)$ & $(4.16, 4.54
 \label{tab:table2}
 \end{table}
 
-En el caso de los parámetros que no mostraron una correlación sobre este umbral con respecto al costo medio, pero sí con la desviación estándar, se realizó un análisis visual mediante la observación de los diagramas de distribución y dispersión. Los valores de correlación obtenidos para estos parámetros se resumen en la tabla [TABLA].
+En el caso de los parámetros que no mostraron una correlación sobre este umbral con respecto al costo medio, pero sí con la desviación estándar, se realizó un análisis visual mediante la observación de los diagramas de distribución y dispersión. Los valores de correlación obtenidos para estos parámetros se resumen en la Tabla IV y los rangos definidos por observación están en la Tabla V.
 
 \begin{table}[h]
   \centering
@@ -226,7 +237,7 @@ En el caso de los parámetros que no mostraron una correlación sobre este umbra
   \label{tab:table1}
 \end{table}
 
-En las figuras [ FIGURAS ] hay un ejemplo de los diagramas de dispersión y de distribución que se usaron para definir el rango de hormigas para $n=30$ por simple observación.
+En las Figuras 3 y 4 hay un ejemplo de los diagramas de dispersión y de distribución que se usaron para definir el rango de hormigas para $n=30$ por simple observación.
 
     \begin{figure}[htbp]
       \centering
@@ -244,7 +255,7 @@ En las figuras [ FIGURAS ] hay un ejemplo de los diagramas de dispersión y de d
         \label{fig:image30}
       \end{minipage}
     \end{figure}
-Para los parámetros restantes, se usaron los rangos por defecto presentados en la Tabla 1.
+Para los parámetros restantes, se usaron los rangos por defecto presentados en la Tabla I.
 \begin{table}[h]
 \centering
 \resizebox{\columnwidth}{!}{%
@@ -263,34 +274,35 @@ Intensidad & (1, 7) & -- & (4, 9) \\
 \caption{Detalles de parámetros}
 \label{tab:table3}
 \end{table}
-El desempeño del algoritmo con respecto a la cota inferior del algoritmo 1-Tree mostró mejoras tras la optimización de los parámetros. En las figuras [ FIGURAS ] se presentan las distribuciones de esta métrica antes y después de la optimización para los casos $n=40, 50$. Los datos de antes de la optimización fueron los recolectados durante la búsqueda aleatoria, mientras que los datos de después de la optimización corresponden a la ejecución de los experimentos con los parámetros ya definidos. Se observa que tras la optimización, no se obtienen tasas mayores a $1.20$ y para el caso de $40$ nodos, todos los resultados estuvieron por debajo de $1.10$.
+
+El desempeño del algoritmo con respecto a la cota inferior del algoritmo 1-Tree mostró mejoras tras la optimización de los parámetros. En las Figuras 5, 6, 7, y 8 se presentan las distribuciones de esta métrica antes y después de la optimización para los casos $n=40, 50$. Los datos de antes de la optimización fueron los recolectados durante la búsqueda aleatoria (100 grafos diferentes, cada uno 30 experimentos), mientras que los datos de después de la optimización (1 grafo, 100 experimentos) corresponden a la ejecución de los experimentos con los parámetros ya definidos. Se observa que tras la optimización, no se obtienen tasas mayores a $1.20$ y para el caso de $40$ nodos, todos los resultados estuvieron por debajo de $1.10$.
 
     \begin{figure}[htbp]
       \centering
       \begin{minipage}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{images/rs_performance_40.png}
-        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
+        \caption{Distribución de tasas de desempeño para $n=40$ antes de la optimización}
         \label{fig:image29}
       \end{minipage}
       \hfill
       \begin{minipage}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{images/final_performance_40.png}
-        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
+        \caption{Distribución de tasas de desempeño para $n=40$ después de la optimización}
         \label{fig:image30}
       \end{minipage}
       \begin{minipage}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{images/rs_performance_50.png}
-        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
+        \caption{Distribución de tasas de desempeño para $n=50$ antes de la optimización}
         \label{fig:image29}
       \end{minipage}
       \hfill
       \begin{minipage}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{images/final_performance_50.png}
-        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
+        \caption{Distribución de tasas de desempeño para $n=50$ después de la optimización}
         \label{fig:image30}
       \end{minipage}
     \end{figure}
@@ -299,30 +311,53 @@ La tasa de desempeño se calcula con la fórmula:
 \begin{equation}
     \text{Tasa de Desempeño} = \frac{\text{costo de ACO}}{\text{cota inferior de 1-Tree}}
 \end{equation}
-Un resultado aceptable es entre $1.05$ y $1.20$.
+Un resultado aceptable para nosotros es entre $1.05$ y $1.20$, teniendo en cuenta que el promedio para otras heurísticas como las voraces es de $1.17$ y para el algoritmo de Christofides es de $1.1$ y no superior a $1.5$.
 
-Las figuras [ FIGURAS ] muestran las mejores soluciones obtenidas para $n=40, 50$ en una ejecución de 100 experimentos. Los parámetros utilizados se encuentran en cada figura.
+Las Figuras 9 y 10 muestran las mejores soluciones obtenidas para $n=40, 50$ en una ejecución de 100 experimentos. Los parámetros utilizados se encuentran en cada figura.
 
-    \begin{figure}[htbp]
-      \centering
-      \begin{minipage}[t]{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{images/solution_40.png}
-        \caption{Diagrama de dispersión del parámetro hormigas para $n=30$}
-        \label{fig:image29}
-      \end{minipage}
-      \hfill
-      \begin{minipage}[t]{0.45\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{images/solution_50.png}
-        \caption{Diagrama de distribución del parámetro hormigas para $n=30$}
-        \label{fig:image30}
-      \end{minipage}
-    \end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/solution_40.png}
+  \caption{Mejor solución para una ejecución de 100 experimentos para un grafo de $40$ nodos con los parámetros optimizados.}
+  \label{fig:image20}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/solution_50.png}
+  \caption{Mejor solución para una ejecución de 100 experimentos para un grafo de $50$ nodos con los parámetros optimizados.}
+  \label{fig:image20}
+\end{figure}
 
 \section{Conclusiones}
-\section{Próximos pasos}
 
+En general, se encontró que el parámetro de número de hormigas no fue determinante y funcionó bien en el rango de n a 5n para todas las instancias. Solo se observó una pequeña correlación en la instancia de 40 nodos, lo que sugiere que a medida que aumenta el número de hormigas, el costo se reduce.
+
+Por otro lado, el número de iteraciones parece ser más determinante a medida que el grafo incrementa su tamaño, indicando que para instancias mayores, más iteraciones reducirían el costo.
+
+El rango óptimo de $\alpha$ se mantuvo consistente entre $0.5$ y $0.65$ para instancias de 30, 40 y 50 nodos, lo que sugiere un sesgo por la explotación antes que la exploración. El rango de beta se mantuvo entre 3.5 y 5 para los cinco escenarios, lo que ratifica el sesgo por la explotación.
+
+Es necesario investigar a qué se debe esta configuración entre $\alpha$ y $\beta$, y determinar si podrían tomar valores en la misma magnitud. Es probable que el sesgo por la explotación se deba a que el rango de iteraciones utilizado estuvo entre $0.5n$ y $0.5n + 100$, lo que podría haber resultado en que al usar valores altos de $\alpha$, el número de iteraciones no era suficiente para encontrar una solución que compitiera con las mejores encontradas hasta el momento durante la búsqueda aleatoria.
+
+No se encontró correlación significativa para la tasa de evaporación ni la intensidad de feromonas. Esto se debe a que la intensidad es igual para todas las hormigas, y para todas las iteraciones. Sin embargo, se encontró cierta relación con la desviación estándar. Por ejemplo, para la instancia de 50 nodos, un valor de intensidad pequeño resultó en una mayor desviación, lo que podría deberse a que a medida que el grafo aumenta su tamaño, los recorridos también lo hacen, por lo que el incremento de la feromona en la matriz es cada vez menos significativo. Puede ser que al obtener números tan pequeños, las hormigas no escogieran los mejores caminos siempre y al final se obtuvieran soluciones muy diferentes entre sí. En cuanto a la tasa de olvido, se encontró cierta correlación con la desviación estándar, pero solo para las instancias de 10 y 30 nodos, por lo que es difícil hacer una apreciación. En términos generales, una tasa de olvido más alta hace que la colonia pierda más información en cada generación, lo que en teoría debería favorecer la exploración. Se sospecha que la exploración no tuvo buenos resultados en este experimento debido al bajo número de iteraciones utilizado y la diferencia de magnitud en los rangos de $\alpha$ y $\beta$.
+
+A pesar del sesgo por la explotación, el desempeño del algoritmo con los parámetros definidos tuvo resultados aceptables, reduciendo la tasa de desempeño máxima de 1.35 a 1.095 para una instancia de 40 nodos, y de 1.45 a 1.19 para una instancia de 50 nodos, lo que satisface el objetivo propuesto de optimización de parámetros con búsqueda aleatoria.
+
+Se sugiere mejorar la metodología de optimización de parámetros mediante la utilización de la técnica de búsqueda aleatoria con un mayor número de iteraciones y con rangos de parámetros más precisos, que tengan en cuenta la distancia promedio entre nodos y el tamaño del grafo para evitar problemas de precisión. Además, se recomienda aumentar la cantidad de iteraciones y variar la estrategia utilizada por ACO para evitar el sesgo de explotación y favorecer también la exploración. Es importante tener en cuenta que estos ajustes implican un mayor tiempo computacional, por lo que es conveniente analizar la complejidad del algoritmo para estimar el tiempo aproximado requerido. Además, se sugiere explorar otros métodos de optimización de parámetros y establecer restricciones en los valores de $\alpha$ y $\beta$, considerando que ambos no pueden ser altos o bajos al mismo tiempo si tienen la misma magnitud.
+
+\section{Próximos pasos}
+\begin{itemize}
+\item Paralelizar el algoritmo ACO para que diferentes grupos de hormigas usen diferentes procesos concurrentes. Esto requiere incluir un mecanismo que permita a los diferentes grupos comunicarse entre sí al final de cada generación para comparar soluciones.
+\item Probar los programas construidos con grafos de más de 50 nodos. 
+\item Analizar resultados de la complejidad en tiempo del algoritmo ACO para estimar cuánto le tomaría al algoritmo ejecutarse bajo ciertos parámetros: tamaño del grafo, número de hormigas y número de iteraciones (generaciones).
+\item Utilizar una estrategia diferente a cycle-system para actualizar la matriz de feromonas, para comparar si hay mejoras en el desempeño. 
+\item Utilizar el conocimiento adquirido en la primera fase del proyecto, para definir los parámetros para grafos más grandes y para otras estrategias diferentes a cycle-system.
+\item Identificar potenciales problemas de precisión al usar un valor de $Q$ pequeño comparado con la distancia entre los nodos y el tamaño del grafo, y explorar la posibilidad de definirlo en base a estos valores.
+\item Investigar la diferencia de magnitud entre $\alpha$ y $\beta$ en los valores optimizados, y analizar si es posible usar valores para estos parámetros en la misma magnitud, o si depende de la distancia promedio entre los nodos.
+\item Evaluar el impacto de evaporación de feromonas en cada iteración con el parámetro $\rho$.
+\item Comparar el tiempo de ejecución de la versión paralelizada y no paralelizada.
+\item Estudiar otras combinaciones de parámetros y con rangos diferentes a las optimizadas con búsqueda aleatoria, por ejemplo favoreciendo la exploración en lugar de la explotación, o variando la tasa de olvido y a intensidad.
+\end{itemize}
 \section*{References}
 
 Please number citations consecutively within brackets \cite{b1}. The 
@@ -345,6 +380,7 @@ For papers published in translation journals, please give the English
 citation first, followed by the original foreign-language citation \cite{b6}.
 
 \begin{thebibliography}{00}
+
 \bibitem{b1} Yang, J., Shi, X., Marchese, M., & Liang, Y. (2008). An ant colony optimization method for generalized TSP problem. Progress in Natural Science, 18(11), 1417-1422. https://doi.org/10.1016/j.pnsc.2008.03.028
 \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
 \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
