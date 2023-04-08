@@ -1,0 +1,7 @@
+gdb main
+
+run {NODES} {EXPERIMENTS}
+
+For example:
+	
+	run 10 5
