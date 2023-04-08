@@ -25,5 +25,10 @@ plt.ylabel('Time (seconds)')
 plt.title('Average ACO algorithm running time vs. number of nodes')
 plt.grid(True)
 
+# Annotate each point with its corresponding x, y values
+for x, y in zip(nodes, avg_times):
+    label = f"({x}, {y:.2f})"
+    plt.annotate(label, (x, y), textcoords="offset points", xytext=(0,10), ha='center')
+
 # Save the plot to a PDF file
 plt.savefig('time_vs_nodes.pdf')
