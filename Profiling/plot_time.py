@@ -51,7 +51,13 @@ data = np.array([
 ants = data[:,1]
 iterations = data[:,2]
 
+# Sort the ants and avg_times arrays by the ants values
+sort_indices = np.argsort(ants)
+ants = ants[sort_indices]
+avg_times = avg_times[sort_indices]
+
 # Create the plot of time vs ants
+plt.clf()  # Clear the current plot
 plt.plot(ants, avg_times, 'o-')
 plt.xlabel('Number of ants')
 plt.ylabel('Time (seconds)')
@@ -65,6 +71,11 @@ for x, y in zip(ants, avg_times):
 
 # Save the plot to a PDF file
 plt.savefig('time_vs_ants.pdf')
+
+# Sort the iterations and avg_times arrays by the iterations values
+sort_indices = np.argsort(iterations)
+iterations = iterations[sort_indices]
+avg_times = avg_times[sort_indices]
 
 # Create the plot of time vs iterations
 plt.clf()  # Clear the current plot
