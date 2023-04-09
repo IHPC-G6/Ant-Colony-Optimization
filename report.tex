@@ -3,10 +3,13 @@
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\documentclass{article}
+\usepackage{algpseudocode}
+
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -55,26 +58,22 @@ ndcontrerasr@unal.edu.co}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+El artículo describe el uso del algoritmo de colonia de hormigas (Ant Colony Optimization, ACO) para resolver el problema del agente viajero (Traveling Salesman Problem, TSP) en grafos de tamaño variable. El objetivo del estudio es optimizar el rendimiento del algoritmo ACO para encontrar soluciones parciales al problema del TSP en grafos de tamaño variable mediante la definición de rangos óptimos de parámetros. Los objetivos específicos incluyen la implementación del algoritmo ACO en C++, la construcción de un generador de grafos aleatorios, la optimización de los parámetros con búsqueda aleatoria, la definición de rangos óptimos de los parámetros, la construcción de un programa que utilice los rangos de parámetros definidos y la realización de experimentos con el programa implementado. Los resultados muestran mejoras en el desempeño del algoritmo tras la optimización de los parámetros y se presenta una comparación del desempeño del algoritmo con respecto a la cota inferior del algoritmo 1-Tree.
 \end{abstract}
 
-\begin{IEEEkeywords}
-component, formatting, style, styling, insert
-\end{IEEEkeywords}
 
 \section{Introducción}
-This document is a model and instructions for \LaTeX.
-Please observe the conference page limits. 
+El Problema del Agente Viajero (TSP, por sus siglas en inglés) es uno de los problemas más estudiados en la teoría de la optimización combinatoria. Se trata de un problema NP-completo que consiste en encontrar la ruta más corta posible que un vendedor debe tomar para visitar todas las ciudades especificadas y regresar a su punto de partida. Este problema es aplicable en varios campos, como la logística, la planeación, la fabricación de circuitos electrónicos, entre otros \cite{aco_wiki}.
+
+Este proyecto tiene como objetivo optimizar el rendimiento del algoritmo de la colonia de hormigas (Ant Colony Optimization, ACO) para encontrar soluciones parciales al problema del agente viajero en grafos de tamaño variable, mediante la definición de rangos óptimos de parámetros. El proyecto busca implementar el algoritmo ACO en C++, construir un generador de grafos aleatorios, optimizar los parámetros con búsqueda aleatoria, definir rangos óptimos de los parámetros y construir un programa en C++ que utilice los rangos de parámetros definidos según el tamaño del grafo. El desempeño del algoritmo será evaluado mediante la comparación de las distribuciones de la métrica 1-Tree antes y después de la optimización de los parámetros. Los resultados del proyecto, incluyendo las matrices de correlación, los histogramas, los diagramas de dispersión y de distribución, pueden encontrarse en el repositorio del proyecto disponible en GitHub en \cite{aco_github_2}.
 
 \section{Descripción del problema}
 
-El Problema del Agente Viajero (Traveling Salesman Problem, TSP), definido de la forma más simple posible, consiste en un vendedor que desea pasar por n ciudades, de las cuales se conoce su posición y por ende la distancia entre ellas, tal que solo pase por cada una de ellas, de la manera más óptima posible, y retorne a su posición inicial. Este problema es aplicable en múltiples campos, tales como, logística, planeación, fabricación de circuitos electrónicos entre otros.
+El Problema del Agente Viajero (Traveling Salesman Problem o TSP, por sus siglas en inglés) consiste en un vendedor que necesita visitar un conjunto de $n$ ciudades, cuyas posiciones y distancias entre ellas son conocidas. El objetivo es encontrar la ruta más corta posible que permita al vendedor visitar cada ciudad exactamente una vez y regresar al punto de partida.
 
- En el problema se presentan N! rutas posibles, aunque se puede simplificar ya que dada una ruta nos da igual el punto de partida y esto reduce el número de rutas a examinar en un factor N quedando (N-1)!. Como no importa la dirección en que se desplace el viajante, el número de rutas a examinar se reduce nuevamente en un factor 2. Por lo tanto, hay que considerar (N-1)!/2 rutas posibles.
+Este problema tiene aplicaciones en diversos campos, como la logística, la planificación y la fabricación de circuitos electrónicos, entre otros. Aunque existen $n!$ posibles rutas, se pueden reducir significativamente al darse cuenta de que cualquier ruta puede ser considerada como la misma si se parte de cualquier ciudad y se recorre en cualquier dirección. Por lo tanto, el número de rutas posibles se reduce a $(n-1)!/2$ \cite{aco_youtube}.
 
- Para solucionar este problema se decidió usar el algoritmo de la colonia de hormigas (Ant Colony Optimization), el cual se describirá en la siguiente sección, el cual genera el camino óptimo para el número de nodos dado en cada caso y se realiza su respectiva gráfica mostrando este camino y los demás caminos posibles. 
+Una solución para el TSP es el algoritmo de la colonia de hormigas (Ant Colony Optimization). En la siguiente sección, se describirá en detalle cómo este algoritmo genera el camino óptimo para un número dado de nodos y se mostrará una gráfica que representa este camino y otros posibles caminos \cite{aco_youtube}.
 
 \section {Objetivos}
 Optimizar el rendimiento del algoritmo ACO para encontrar soluciones parciales al problema del agente viajero (TSP) en grafos de tamaño variable mediante la definición de rangos óptimos de parámetros.
@@ -89,13 +88,54 @@ Optimizar el rendimiento del algoritmo ACO para encontrar soluciones parciales a
 \end{itemize}
 \section {Metodología}
 \subsection{Implementación del algoritmo ACO}
-El algoritmo ACO se implementó en C++, tomando como referencia una implementación existente en Python disponible en \url{https://github.com/ppoffice/ant-colony-tsp}. Se clonó este repositorio y se revisó línea por línea, verificando la correctitud y que las fórmulas coincidieran con la bibliografía consultada. Se hicieron unos ajustes a esta versión en Python para que fuera más clara y eficiente y se procedió a traducir el código a C++.
+El algoritmo ACO se implementó en C++, tomando como referencia una implementación existente en Python disponible en \cite{aco_github_1}. Se clonó este repositorio y se revisó línea por línea, verificando la correctitud y que las fórmulas coincidieran con la bibliografía consultada. Se hicieron unos ajustes a esta versión en Python para que fuera más clara y eficiente. Este código modificado está disponible en \cite{aco_github_3}. Luego se procedió a traducir el código a C++.
 El código en C++ se modularizó en tres clases:
 \begin{itemize}
 \item ACO: Clase que incluye métodos para actualizar la matriz de feromonas de la colonia y solucionar el problema del TSP mediante instanciación de hormigas que recorren el grafo en cada iteración, actualizando la matriz de feromonas y llevando registro de la mejor solución encontrada hasta el momento.
 \item ACO Graph: Clase que representa el grafo del problema mediante una matriz de distancias y una matriz de feromonas.
 \item Ant: Clase que representa la unidad básica del algoritmo ACO, implementando los métodos de selección del siguiente nodo y variabilidad de la intensidad de feromonas dispersadas en cada paso.
 \end{itemize}
+
+El algoritmo de ACO puede representarse en psuedocódigo de la siguiente manera \cite{aco_wiki}:
+
+\begin{algorithmic}[1]
+\Procedure{ACO}{iterations, ants}
+\State best-solution $\gets$ $\infty$
+\For{iter in iterations}
+\State initialize-ants
+\For{ant in ants}
+\State ant.calculate-solution
+\If{ant.solution $<$ best-solution}
+\State best-solution $\gets$ ant.solution
+\EndIf
+\State ant.put-pheromones
+\EndFor
+\State update-pheromone-matrix
+\EndFor
+\State \textbf{return} best-solution
+\EndProcedure
+\end{algorithmic}
+
+La ecuación 1 define la probabilidad para que una hormiga estando en un nodo $x$, seleccione el nodo $y$ como su siguiente nodo. Donde $\tau_{xy}$ es la cantidad de feromona depositada para la transición del estado $x$ al estado $y$, $0 \leq \alpha$ es un parámetro para controlar la influencia de $\tau_{xy}$, $\eta_{xy}$ es la deseabilidad de la transición de estado $xy$ (conocimiento previo, típicamente $1/d_{xy}$, donde $d$ es la distancia) y $\beta \geq 1$ es un parámetro para controlar la influencia de $\eta_{xy}$. $\tau_{xz}$ y $\eta_{xz}$ representan el nivel de rastro y la atracción para otras posibles transiciones de estado \cite{aco_wiki}.
+
+\begin{equation}
+p_{xy}^{k} = \frac{(\tau_{xy}^\alpha)(\eta_{xy}^\beta)}{\sum_{z\in\text{allowed}} (\tau_{xz}^\alpha)(\eta_{xz}^\beta)}
+\end{equation}
+
+La ecuación 2 define la cantidad de feromona que se deposita en cada enlace del grafo. Donde $\tau_{xy}$ es la cantidad de feromona depositada para una transición de estado $xy$, $\rho$ es el coeficiente de evaporación de feromona, $m$ es el número de hormigas y $\Delta \tau_{xy}^{k}$ es la cantidad de feromona depositada por la $k$-ésima hormiga, típicamente dada para un problema TSP (con movimientos correspondientes a arcos del grafo) por la ecuación 3, donde $L_k$ es el costo del recorrido de la $k$-ésima hormiga (típicamente longitud) y $Q$ es la constante de intensidad \cite{aco_wiki}.
+
+\begin{equation}
+\tau_{xy} \gets (1-\rho)\tau_{xy} + \sum_{k}^{m} \Delta\tau_{xy}^{k}
+\end{equation}
+
+\begin{equation}
+  \Delta\tau^{k}_{xy} =
+  \begin{cases}
+    Q/L_{k} & \text{if ant } k \text{ uses link } {xy} \text{ in its tour} \\
+    0 & \text{otherwise}
+  \end{cases}
+\end{equation}
+
 \subsection{Construcción del generador de grafos}
 Se creó un programa que recibe el tamaño n del grafo como parámetro y genera las coordenadas cartesianas de los nodos utilizando un generador de números aleatorios con distribución uniforme. Se garantiza que los nodos estén separados por al menos 100 unidades y se calculan las distancias entre ellos para generar una matriz de distancias utilizada en ACO Graph. El programa también devuelve una lista de puntos que se utiliza para graficar el grafo con las librerías NetworkX y Matplotlib de Python al final del proceso.
 \subsection{Optimización de parámetros con búsqueda aleatoria}
@@ -115,7 +155,7 @@ Para cada uno de los $100$ grafos generados por tamaño, se ejecutó el algoritm
 Se llevó a cabo un análisis en Python mediante la visualización de matrices de correlación y gráficos de dispersión y distribución. El proceso consistió en lo siguiente:
 \begin{itemize}
 \item Para cada tamaño de grafo, se calculó una matriz de correlación a partir del conjunto de datos construido con los parámetros y la variable objetivo. En este caso, la variable objetivo es el costo medio obtenido de los experimentos para cada grafo. Además, se incluyó la desviación estándar para examinar la relación de los parámetros con esta métrica que puede indicar si favorecen o no la convergencia de la solución.
-\item Se estableció un umbral arbitrario de correlación de magnitud mayor a 0.15 para seleccionar los parámetros más importantes en la minimización del costo. A continuación, se utilizó una técnica de agrupación de histogramas (histogram binning) para determinar los intervalos de valores donde el costo promedio es menor. Para ello, se dividió el dataset en 10 subintervalos en función del valor mínimo y máximo del parámetro en cuestión. Luego, se calculó el valor medio de la variable objetivo para cada subintervalo. El intervalo con la media más baja de la variable objetivo fue seleccionado como el rango óptimo.
+\item Se estableció un umbral arbitrario de correlación de magnitud mayor a 0.15 para seleccionar los parámetros más importantes en la minimización del costo. A continuación, se utilizó una técnica de agrupación de histogramas (histogram binning) \cite{data_binning_wiki} para determinar los intervalos de valores donde el costo promedio es menor. Para ello, se dividió el dataset en 10 subintervalos en función del valor mínimo y máximo del parámetro en cuestión. Luego, se calculó el valor medio de la variable objetivo para cada subintervalo. El intervalo con la media más baja de la variable objetivo fue seleccionado como el rango óptimo.
 \item Para aquellos parámetros que no presentaban una correlación significativa con el costo pero sí con la desviación estándar, se recurrió a la observación visual de gráficos de dispersión y distribución para determinar qué rangos serían más adecuados.
 \item Finalmente, para los parámetros restantes, se establecieron los rangos presentados en la Tabla I, donde $n$ es el tamaño del grafo.
 
@@ -156,7 +196,7 @@ Al final de todo el proceso, un script de Python lee los archivos generados, y g
 \end{itemize}
 
 \section{Resultados}
-En las Figuras 1 Y 2 se muestran las matrices de correlación obtenidas para $n=40,50$. Las matrices de correlación para los demás valores de $n$, así como las demás gráficas generadas que no se incluyen en este reporte, pueden encontrarse en el repositorio del proyecto disponible en \url{https://github.com/IHPC-G6/Ant-Colony-Optimization} . En estas matrices, solo se prestó atención a las filas y columnas correspondientes a la variable objetivo (costo medio) y a la desviación estándar del costo.
+En las Figuras 1 Y 2 se muestran las matrices de correlación obtenidas para $n=40,50$. Las matrices de correlación para los demás valores de $n$, así como las demás gráficas generadas que no se incluyen en este reporte, pueden encontrarse en el repositorio del proyecto disponible en \cite{aco_github_2} . En estas matrices, solo se prestó atención a las filas y columnas correspondientes a la variable objetivo (costo medio) y a la desviación estándar del costo.
 
     \begin{figure}[htbp]
       \centering
@@ -175,7 +215,7 @@ En las Figuras 1 Y 2 se muestran las matrices de correlación obtenidas para $n=
       \end{minipage}
     \end{figure}
 
-En la Tabla II se presentan los resultados de la correlación de cada parámetro con respecto al costo medio (variable objetivo). Solo se muestran los valores cuya magnitud es mayor o igual a $0.15$. Para aquellos parámetros que presentaron una correlación sobre este umbral, se aplicó la técnica de histogram binning, y los resultados se resumen en la Tabla III.
+En la Tabla II se presentan los resultados de la correlación de cada parámetro con respecto al costo medio (variable objetivo). Solo se muestran los valores cuya magnitud es mayor o igual a $0.15$. Para aquellos parámetros que presentaron una correlación sobre este umbral, se aplicó la técnica de histogram binning \cite{data_binning_wiki}, y los resultados se resumen en la Tabla III.
 
 \begin{table}[h]
 \centering
@@ -311,7 +351,7 @@ La tasa de desempeño se calcula con la fórmula:
 \begin{equation}
     \text{Tasa de Desempeño} = \frac{\text{costo de ACO}}{\text{cota inferior de 1-Tree}}
 \end{equation}
-Un resultado aceptable para nosotros es entre $1.05$ y $1.20$, teniendo en cuenta que el promedio para otras heurísticas como las voraces es de $1.17$ y para el algoritmo de Christofides es de $1.1$ y no superior a $1.5$.
+Un resultado aceptable para nosotros es entre $1.05$ y $1.20$, teniendo en cuenta que el promedio para otras heurísticas como las voraces es de $1.17$ y para el algoritmo de Christofides es de $1.1$ y no superior a $1.5$ \cite{aco_youtube}\cite{chris_wiki}.
 
 Las Figuras 9 y 10 muestran las mejores soluciones obtenidas para $n=40, 50$ en una ejecución de 100 experimentos. Los parámetros utilizados se encuentran en cada figura.
 
@@ -358,39 +398,28 @@ Se sugiere mejorar la metodología de optimización de parámetros mediante la u
 \item Comparar el tiempo de ejecución de la versión paralelizada y no paralelizada.
 \item Estudiar otras combinaciones de parámetros y con rangos diferentes a las optimizadas con búsqueda aleatoria, por ejemplo favoreciendo la exploración en lugar de la explotación, o variando la tasa de olvido y a intensidad.
 \end{itemize}
-\section*{References}
 
-Please number citations consecutively within brackets \cite{b1}. The 
-sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
-number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
-the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
+\begin{thebibliography}{9}
+\bibitem{aco_youtube}
+Reducible. (2018, October 16). Ant Colony Optimization Algorithm - Explanation \& Implementation [Video]. YouTube.
+\bibitem{aco_wiki}
+Ant colony optimization algorithms - Wikipedia.
+\bibitem{aco_github_1}
+ppoffice/ant-colony-tsp: Ant Colony Optimization for TSP problems.
+\\\texttt{https://github.com/ppoffice/ant-colony-tsp}
+\bibitem{aco_github_2}
+IHPC-G6/Ant-Colony-Optimization: Implementation of Ant Colony Optimization for the Traveling Salesman Problem.
+\\\texttt{https://github.com/IHPC-G6/Ant-Colony-Optimization}
 
-Number footnotes separately in superscripts. Place the actual footnote at 
-the bottom of the column in which it was cited. Do not put footnotes in the 
-abstract or reference list. Use letters for table footnotes.
+\bibitem{aco_github_3}
+IHPC-G6/ant-colony-tsp-py: Improved Python Implementation for ACO to solve TSP problems
+\\\texttt{https://github.com/IHPC-G6/ant-colony-tsp-py}
 
-Unless there are six authors or more give all authors' names; do not use 
-``et al.''. Papers that have not been published, even if they have been 
-submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
-that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
-Capitalize only the first word in a paper title, except for proper nouns and 
-element symbols.
+\bibitem{chris_wiki}
+Christofides algorithm - Wikipedia.
 
-For papers published in translation journals, please give the English 
-citation first, followed by the original foreign-language citation \cite{b6}.
+\bibitem{data_binning_wiki}
+Data binning - Wikipedia
 
-\begin{thebibliography}{00}
-
-\bibitem{b1} Yang, J., Shi, X., Marchese, M., & Liang, Y. (2008). An ant colony optimization method for generalized TSP problem. Progress in Natural Science, 18(11), 1417-1422. https://doi.org/10.1016/j.pnsc.2008.03.028
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
 \end{thebibliography}
-\vspace{12pt}
-\color{red}
-IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
-
 \end{document}
