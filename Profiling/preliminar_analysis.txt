@@ -1,0 +1,7 @@
+En time vs nodes, vemos que el tiempo promedio para 29 nodos fue de 1.15, mientras que para 24 fue 2.09.
+
+En time vs ants, vemos que el número de hormigas para 29 nodos fue 141 y para 24 fue de 147. Es decir, hubo 6 hormigas más para 24 nodos, y esa puede ser la razón por la que tomó más tiempo en promedio.
+
+Esto sugiere que en la fórmula de complejidad del tiempo de ACO, el número de hormigas debe tener mucho más peso que el número de nodos. 
+
+En time vs iterations se puede ver que para para 24 nodos se hicieron 29 iteraciones y para 29, 115. Es decir que el número de iteraciones no pesa tanto en la complejidad del algoritmo. Por eso se ve una gráfica muy irregular que no sigue alguna tendencia creciente. El comportamiento se ve muy alterado por los otros dos parámetros: nodos y hormigas. 

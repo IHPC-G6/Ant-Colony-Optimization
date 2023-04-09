@@ -12,6 +12,7 @@
 #include "ACO/ACO.h"
 #include "MST/MST.h"
 #include "MST/OneTree.h"
+#include <chrono>
 
 using namespace std;
 
@@ -73,7 +74,12 @@ int main(int argc, char* argv[]) {
   string f_paths = "Data/paths/paths_" + to_string(n) + "_" + to_string(runs) + ".txt";
   out_paths = fopen(f_paths.c_str(), "w");
 
-  if (out_graph == NULL || out_costs == NULL || out_paths == NULL) {
+
+  FILE *out_times;
+  string f_times = "Profiling/times/times_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  out_times = fopen(f_times.c_str(), "w");
+
+  if (out_graph == NULL || out_costs == NULL || out_paths == NULL || out_times == NULL) {
       cout << "Error opening files." << endl;
       return 1;
   }
@@ -136,7 +142,17 @@ int main(int argc, char* argv[]) {
   {
     cout << "Experiment " << i << endl;
 
+    auto start = chrono::steady_clock::now();
+
     pair<vector<int>, double> result = aco.solve(&graph);
+
+    auto end = chrono::steady_clock::now();
+
+    chrono::duration<double> elapsed_time = end - start;
+
+    double duration = elapsed_time.count();
+
+    fprintf(out_times, "%f\n", duration);
 
     vector<int> path = result.first;  
     double cost = result.second;
