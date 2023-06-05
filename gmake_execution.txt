@@ -1,5 +1,0 @@
-gmake -f makefile.mk NODES={NODES} EXPERIMENTS={EXPERIMENTS}
-
-For example:
-
-	gmake -f makefile.mk NODES=20 EXPERIMENTS=100
