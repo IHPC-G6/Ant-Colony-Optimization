@@ -67,20 +67,20 @@ int main(int argc, char* argv[]) {
 
   // Opening files
   FILE *out_graph;
-  string f_graph = "Parallel/00/Data/graphs/graph_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_graph = "Data/graphs/graph_" + to_string(n) + "_" + to_string(runs) + ".txt";
   out_graph = fopen(f_graph.c_str(), "w");
 
   FILE *out_costs;
-  string f_costs = "Parallel/00/Data/costs/costs_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_costs = "Data/costs/costs_" + to_string(n) + "_" + to_string(runs) + ".txt";
   out_costs = fopen(f_costs.c_str(), "w");
 
   FILE *out_paths;
-  string f_paths = "Parallel/00/Data/paths/paths_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_paths = "Data/paths/paths_" + to_string(n) + "_" + to_string(runs) + ".txt";
   out_paths = fopen(f_paths.c_str(), "w");
 
 
   FILE *out_times;
-  string f_times = "Parallel/00/Times/times_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_times = "Times/times_" + to_string(n) + "_" + to_string(runs) + ".txt";
   out_times = fopen(f_times.c_str(), "w");
 
   if (out_graph == NULL || out_costs == NULL || out_paths == NULL || out_times == NULL) {

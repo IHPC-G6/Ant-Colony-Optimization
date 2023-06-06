@@ -1,9 +1,5 @@
 This is the unoptimized sequential version used in the first part of the prject.
 
-The source files are the same that were used in the first part of the project.
-
-The only difference is the main00.cpp file which is a copy of the original main.cpp file but with fixed parameters.
-
 To compile the program, got o the root folder of the project and run:
 
 ```bash

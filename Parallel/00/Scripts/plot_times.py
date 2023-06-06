@@ -10,9 +10,10 @@ for n in num_nodes:
         avg_time = sum(times) / len(times)
         avg_times.append(avg_time)
 
-plt.plot(num_nodes, avg_times, marker='o')
-plt.xlabel("Number of Nodes")
-plt.ylabel("Average Time")
+plt.plot(num_nodes, avg_times, marker='o', label='Unoptimized Sequential')
+plt.xlabel("Number of Nodes [$n$]")
+plt.ylabel("Average Time [$s$]")
 plt.title("Average Time vs Number of Nodes")
 plt.grid(True)
+plt.legend()
 plt.savefig('../Results/time_vs_nodes_00.pdf')
