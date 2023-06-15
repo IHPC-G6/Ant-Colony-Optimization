@@ -19,8 +19,10 @@ class ACO {
         int ant_count;
         int iterations;
         int update_strategy;
+        int pid ; 
+        int np ;
 
-        ACO(int ant_count, int iterations, float alpha, float beta, float rho, int q, int strategy);
+        ACO(int ant_count, int iterations, float alpha, float beta, float rho, int q, int strategy, int pid , int np);
 
         void update_pheromone_matrix(ACOGraph* graph, std::vector<std::unique_ptr<Ant>>& ants);
 

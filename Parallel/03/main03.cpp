@@ -8,6 +8,7 @@
 #include <limits>
 #include <numeric>
 #include <random>
+#include <mpi.h>
 #include "Utils/GraphConstructor.h"
 #include "ACO/ACO.h"
 #include "MST/MST.h"
@@ -56,7 +57,15 @@ double get_random(double min, double max) {
 
 int main(int argc, char* argv[]) {
 
-  if (argc != 3) {
+  /* MPI Variables */
+  int np, pid;
+
+  /* MPI setup */
+  MPI_Init(&argc, &argv);
+  MPI_Comm_size(MPI_COMM_WORLD, &np);
+  MPI_Comm_rank(MPI_COMM_WORLD, &pid);
+
+  if (argc != 3 && pid == 0 ) {
     cerr << "Usage: " << argv[0] << " nodes" << " experiments" << endl;
     return 1;
   }
@@ -135,66 +144,69 @@ int main(int argc, char* argv[]) {
   }
 
   ACOGraph graph(fmatrix);
-  ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0);
+  ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0 , pid , np );
+  double improved_lower_bound ;
+  if ( pid == 0 ){
+    cout << ant_count << " " << iterations << " " << alpha << " " << beta << " " << rho << " " << Q << endl;
 
-  cout << ant_count << " " << iterations << " " << alpha << " " << beta << " " << rho << " " << Q << endl;
+    // Calculating Lower Bounds
+    double MSTCost = primMST(matrix); // MST Lowest Bound with MST
+    improved_lower_bound = oneTree(matrix); // Improved Lower Bound with 1-Tree
 
-  // Calculating Lower Bounds
-  double MSTCost = primMST(matrix); // MST Lowest Bound with MST
-  double improved_lower_bound = oneTree(matrix); // Improved Lower Bound with 1-Tree
-
-  // Writing n, lower bounds, params and points to graph file:
-  fprintf(out_graph, "%d\n", n);
-  fprintf(out_graph, "%f\n", MSTCost);
-  fprintf(out_graph, "%f\n", improved_lower_bound);
-  fprintf(out_graph, "%d %d %f %f %f %d\n", ant_count, iterations, alpha, beta, rho, Q);
-  for (const auto& p : points) {
-      fprintf(out_graph, "%d %d\n", p.first, p.second);
+    // Writing n, lower bounds, params and points to graph file:
+    fprintf(out_graph, "%d\n", n);
+    fprintf(out_graph, "%f\n", MSTCost);
+    fprintf(out_graph, "%f\n", improved_lower_bound);
+    fprintf(out_graph, "%d %d %f %f %f %d\n", ant_count, iterations, alpha, beta, rho, Q);
+    for (const auto& p : points) {
+        fprintf(out_graph, "%d %d\n", p.first, p.second);
+    }
+    fclose(out_graph);
   }
-  fclose(out_graph);
-
   // Running Experiments
   for (int i = 0; i < runs; i ++)
   {
-    cout << "Experiment " << i << endl;
-
+    if ( pid == 0 ){
+      cout << "Experiment " << i << endl;
+      
+    }
     auto start = chrono::steady_clock::now();
-
     pair<vector<int>, double> result = aco.solve(&graph);
-
-    auto end = chrono::steady_clock::now();
-
+    auto end = chrono::steady_clock::now(); 
     chrono::duration<double> elapsed_time = end - start;
+    if ( pid == 0 ){
+      
 
-    double duration = elapsed_time.count();
+      double duration = elapsed_time.count();
 
-    fprintf(out_times, "%f\n", duration);
+      fprintf(out_times, "%f\n", duration);
 
-    vector<int> path = result.first;  
-    double cost = result.second;
+      vector<int> path = result.first;  
+      double cost = result.second;
+    
+      // Printing ACO Path
+      /*
+      cout << "ACP Path: ";
+      for (int i = 0; i < path.size(); i++) {
+        cout << path[i] << " ";
+      }
+      cout << endl;
+      */
 
-    // Printing ACO Path
-    /*
-    cout << "ACP Path: ";
-    for (int i = 0; i < path.size(); i++) {
-      cout << path[i] << " ";
+      cout << "ACO Cost: " << cost << endl;  
+      cout << "1-Tree Performance: " << cost / improved_lower_bound << endl;  
+
+      // Writing path to paths file:
+      for (const auto& node : path) {
+          fprintf(out_paths, "%d ", node);
+      }
+      fprintf(out_paths, "\n");
+
+      // Writing cost to costs file
+      fprintf(out_costs, "%f\n", cost);
     }
-    cout << endl;
-    */
-
-    cout << "ACO Cost: " << cost << endl;  
-    cout << "1-Tree Performance: " << cost / improved_lower_bound << endl;  
-
-    // Writing path to paths file:
-    for (const auto& node : path) {
-        fprintf(out_paths, "%d ", node);
-    }
-    fprintf(out_paths, "\n");
-
-    // Writing cost to costs file
-    fprintf(out_costs, "%f\n", cost);
   }
-
+  MPI_Finalize();
   fclose(out_paths);
   fclose(out_costs);
 
