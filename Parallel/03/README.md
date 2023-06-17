@@ -11,5 +11,7 @@ mpic++ -o main03 main03.cpp -O3 ACO/ACOGraph.cpp ACO/ACO.cpp ACO/Ant.cpp Utils/G
 To run the experiments use:
 
 ``` bash
-bash main03.sh
+bash main03.sh np
 ```
+
+Where np is the number of processes you want to use.

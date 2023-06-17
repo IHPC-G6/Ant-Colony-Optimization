@@ -76,20 +76,20 @@ int main(int argc, char* argv[]) {
 
   // Opening files
   FILE *out_graph;
-  string f_graph = "Data/graphs/graph_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_graph = "Data/graphs/graph_" + to_string(n) + "_" + to_string(runs) + "_" + to_string(np) + ".txt";
   out_graph = fopen(f_graph.c_str(), "w");
 
   FILE *out_costs;
-  string f_costs = "Data/costs/costs_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_costs = "Data/costs/costs_" + to_string(n) + "_" + to_string(runs) + "_" + to_string(np) + ".txt";
   out_costs = fopen(f_costs.c_str(), "w");
 
   FILE *out_paths;
-  string f_paths = "Data/paths/paths_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_paths = "Data/paths/paths_" + to_string(n) + "_" + to_string(runs) + "_" + to_string(np) + ".txt";
   out_paths = fopen(f_paths.c_str(), "w");
 
 
   FILE *out_times;
-  string f_times = "Times/times_" + to_string(n) + "_" + to_string(runs) + ".txt";
+  string f_times = "Times/times_" + to_string(n) + "_" + to_string(runs) + "_" + to_string(np) + ".txt";
   out_times = fopen(f_times.c_str(), "w");
 
   if (out_graph == NULL || out_costs == NULL || out_paths == NULL || out_times == NULL) {
@@ -144,9 +144,9 @@ int main(int argc, char* argv[]) {
   }
 
   ACOGraph graph(fmatrix);
-  ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0 , pid , np );
+  ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0, pid, np);
   double improved_lower_bound ;
-  if ( pid == 0 ){
+  if (pid == 0) {
     cout << ant_count << " " << iterations << " " << alpha << " " << beta << " " << rho << " " << Q << endl;
 
     // Calculating Lower Bounds
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
     fprintf(out_graph, "%f\n", improved_lower_bound);
     fprintf(out_graph, "%d %d %f %f %f %d\n", ant_count, iterations, alpha, beta, rho, Q);
     for (const auto& p : points) {
-        fprintf(out_graph, "%d %d\n", p.first, p.second);
+      fprintf(out_graph, "%d %d\n", p.first, p.second);
     }
     fclose(out_graph);
   }
@@ -174,11 +174,9 @@ int main(int argc, char* argv[]) {
     pair<vector<int>, double> result = aco.solve(&graph);
     auto end = chrono::steady_clock::now(); 
     chrono::duration<double> elapsed_time = end - start;
-    if ( pid == 0 ){
-      
 
+    if (pid == 0) {
       double duration = elapsed_time.count();
-
       fprintf(out_times, "%f\n", duration);
 
       vector<int> path = result.first;  
@@ -198,7 +196,7 @@ int main(int argc, char* argv[]) {
 
       // Writing path to paths file:
       for (const auto& node : path) {
-          fprintf(out_paths, "%d ", node);
+        fprintf(out_paths, "%d ", node);
       }
       fprintf(out_paths, "\n");
 
@@ -206,7 +204,9 @@ int main(int argc, char* argv[]) {
       fprintf(out_costs, "%f\n", cost);
     }
   }
+
   MPI_Finalize();
+
   fclose(out_paths);
   fclose(out_costs);
 
