@@ -9,6 +9,6 @@
 
 using namespace std;
 
-pair<vector<vector<double>>, vector<pair<int, int>>> BuildGraph(int n);
+pair<vector<vector<double>>, vector<pair<int, int>>> BuildGraph(int n , int seed);
 
 #endif // GRAPH_CONSTRUCTOR_H

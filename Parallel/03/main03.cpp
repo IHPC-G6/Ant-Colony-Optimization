@@ -65,14 +65,15 @@ int main(int argc, char* argv[]) {
   MPI_Comm_size(MPI_COMM_WORLD, &np);
   MPI_Comm_rank(MPI_COMM_WORLD, &pid);
 
-  if (argc != 3 && pid == 0 ) {
-    cerr << "Usage: " << argv[0] << " nodes" << " experiments" << endl;
+  if (argc != 4 && pid == 0 ) {
+    cerr << "Usage: " << argv[0] << " nodes" << " experiments" << " seed" << endl;
     return 1;
   }
 
   // Reading Parameter n
   int n = atoi(argv[1]);
   int runs = atoi(argv[2]);
+  int seed = atoi(argv[3]);
 
   // Opening files
   FILE *out_graph;
@@ -98,8 +99,8 @@ int main(int argc, char* argv[]) {
   }
 
   // Constructing graph
-  pair<vector<vector<double>>, vector<pair<int, int>>> G = BuildGraph(n);
-
+  pair<vector<vector<double>>, vector<pair<int, int>>> G = BuildGraph(n,seed);
+    
   vector<vector<double>> matrix = G.first;
   vector<pair<int, int>> points = G.second;
 
@@ -192,6 +193,7 @@ int main(int argc, char* argv[]) {
       */
 
       cout << "ACO Cost: " << cost << endl;  
+      cout << improved_lower_bound << endl;
       cout << "1-Tree Performance: " << cost / improved_lower_bound << endl;  
 
       // Writing path to paths file:
