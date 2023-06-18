@@ -18,11 +18,11 @@ double distance(int pos, int pos_1) {
     return dist;
 }
 
-pair<vector<vector<double>>, vector<pair<int, int>>> BuildGraph(int n) {
+pair<vector<vector<double>>, vector<pair<int, int>>> BuildGraph(int n , int seed ) {
     points.clear(); // needs to be cleared to generate different poins when calling the function within a for loop
     vector<vector<double>> cost_matrix;
     std::random_device rd;
-    std::mt19937 gen(std::time(nullptr)); // seed with current time
+    std::mt19937 gen(seed); // seed with current time
     std::uniform_real_distribution<> dis(0, 2000);
     for (int i = 0; i < n; i++) {
         int x, y;
