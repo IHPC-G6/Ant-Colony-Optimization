@@ -8,9 +8,9 @@ fi
 np=$1
 EXPERIMENTS=100
 
-SEED = 10
+SEED = 42
 
 for (( NODES = 10; NODES <= 100; NODES += 5 )); do
     echo "Running ./main03 $NODES $EXPERIMENTS $SEED"
-    mpirun -np 4 ./main03 $NODES $EXPERIMENTS $SEED
+    mpirun -np "$np" --oversubscribe ./main03 "$NODES" "$EXPERIMENTS" "$SEED"
 done
