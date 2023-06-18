@@ -144,8 +144,8 @@ int main(int argc, char* argv[]) {
       }
   }
 
-  ACOGraph graph(fmatrix);
-  ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0, pid, np);
+  //ACOGraph graph(fmatrix);
+  //ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0, pid, np);
   double improved_lower_bound ;
   if (pid == 0) {
     cout << ant_count << " " << iterations << " " << alpha << " " << beta << " " << rho << " " << Q << endl;
@@ -171,6 +171,8 @@ int main(int argc, char* argv[]) {
       cout << "Experiment " << i << endl;
       
     }
+    ACOGraph graph(fmatrix);
+    ACO aco(ant_count, iterations, alpha, beta, rho, Q, 0, pid, np);
     auto start = chrono::steady_clock::now();
     pair<vector<int>, double> result = aco.solve(&graph);
     auto end = chrono::steady_clock::now(); 
