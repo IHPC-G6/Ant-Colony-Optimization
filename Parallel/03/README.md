@@ -13,5 +13,4 @@ To run the experiments use:
 ``` bash
 bash main03.sh np
 ```
-
 Where np is the number of processes you want to use.
