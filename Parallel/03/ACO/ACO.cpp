@@ -37,7 +37,9 @@ void ACO::update_pheromone_matrix(ACOGraph* graph, std::vector<std::unique_ptr<A
 std::pair<std::vector<int>, double> ACO::solve(ACOGraph* graph) {
     double best_cost = std::numeric_limits<double>::infinity();
     std::vector<int> best_solution;
+    graph-> pheromone_matrix.resize(graph -> n * graph -> n , 1.0/(graph->n * graph -> n ) ) ;
     int ant_limit = (ant_count / np) ;
+    
     if (ant_count % np < pid) {
         ant_limit += 1; 
     }
@@ -68,7 +70,7 @@ std::pair<std::vector<int>, double> ACO::solve(ACOGraph* graph) {
         update_pheromone_matrix(graph, ants);
         std::vector<double> pheromone_matrix_buffer(graph->n*graph->n, 0); // pheromone matrix buffer 
         // all reduce to share pheremone_matrix
-        MPI_Allreduce(&pheromone_matrix_buffer[0], &graph->pheromone_matrix[0], graph->n*graph->n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce( &graph->pheromone_matrix[0], &pheromone_matrix_buffer[0], graph->n*graph->n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         graph->pheromone_matrix = pheromone_matrix_buffer;
         //std::cout<<globalres[1]<<std::endl;
         if ( pid == 0 ){
