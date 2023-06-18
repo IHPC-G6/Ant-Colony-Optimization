@@ -37,16 +37,9 @@ void ACO::update_pheromone_matrix(ACOGraph* graph, std::vector<std::unique_ptr<A
 std::pair<std::vector<int>, double> ACO::solve(ACOGraph* graph) {
     double best_cost = std::numeric_limits<double>::infinity();
     std::vector<int> best_solution;
-<<<<<<< Updated upstream
     int ant_limit = (ant_count / np) ;
     if (ant_count % np < pid) {
         ant_limit += 1; 
-=======
-    int limit = ( ant_count / np ) ;
-    graph -> pheromone_matrix.resize(graph ->n * graph ->n,  1.0 / (graph ->n * graph ->n));
-    if ( ant_count % np < pid ){
-        limit +=1 ; 
->>>>>>> Stashed changes
     }
     for (int iter = 0; iter < iterations; iter++) {
         
@@ -65,42 +58,23 @@ std::pair<std::vector<int>, double> ACO::solve(ACOGraph* graph) {
             // update pheromone delta of each ant
             ant->update_pheromone_delta_matrix();
         }
-<<<<<<< Updated upstream
-        int localres[2];
-        int globalres[2]; // stores the best solution of all localres
-        localres[0] = best_cost; 
-        localres[1] = pid;
-        // all reduce to share localres[0]: best cost
-        MPI_Allreduce(localres, globalres, 1, MPI_2INT, MPI_MINLOC, MPI_COMM_WORLD);
+        int localres[2] ;
+        int globalres[2] ;
+        localres[0] = best_cost ; 
+        localres[1] = pid ;
+        MPI_Allreduce(localres, globalres, 1, MPI_2INTEGER, MPI_MINLOC, MPI_COMM_WORLD);
+        best_cost = globalres [ 0 ]; 
         // update pheromone matrix at the end of the iteration
         update_pheromone_matrix(graph, ants);
         std::vector<double> pheromone_matrix_buffer(graph->n*graph->n, 0); // pheromone matrix buffer 
         // all reduce to share pheremone_matrix
         MPI_Allreduce(&pheromone_matrix_buffer[0], &graph->pheromone_matrix[0], graph->n*graph->n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         graph->pheromone_matrix = pheromone_matrix_buffer;
-        if (pid == 0) {
-            if (pid != 0) {
-                MPI_Recv(&best_solution[0], graph->n, MPI_INT, localres[1], 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            }    
-=======
-        int localres[2] ;
-        int globalres[2] ;
-        localres[0] = best_cost ; 
-        localres[1] = pid ;
-        MPI_Allreduce(localres, globalres, 1, MPI_2INTEGER, MPI_MINLOC, MPI_COMM_WORLD);
-         // update pheromone matrix at the end of the iteration
-        best_cost = globalres [ 0 ]; 
-        update_pheromone_matrix(graph, ants);
-        std::vector<double> pheromone_matrix_1(graph->n*graph->n,0);
-        MPI_Allreduce( &graph->pheromone_matrix[0],&pheromone_matrix_1[0], graph->n*graph->n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        graph->pheromone_matrix=pheromone_matrix_1;
         //std::cout<<globalres[1]<<std::endl;
         if ( pid == 0 ){
             if ( globalres[1] != 0 ){
                 MPI_Recv(&best_solution[0], graph->n , MPI_INT , globalres[1] , 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             }
-           
->>>>>>> Stashed changes
         }
         else{
             if (pid == globalres[1]) {
