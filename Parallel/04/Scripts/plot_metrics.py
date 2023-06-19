@@ -28,7 +28,7 @@ plt.xlabel('Number of Processes')
 plt.ylabel('Speedup')
 plt.title('ACO Speedup for $N=100$')
 plt.legend()
-plt.savefig('S.pdf')
+plt.savefig('../Results/speedup.pdf')
 
 # Plot parallel efficiency
 plt.figure()
@@ -38,7 +38,7 @@ plt.xlabel('Number of Processes')
 plt.ylabel('Parallel Efficiency')
 plt.title('ACO Parallel Efficiency for $N=100$')
 plt.legend()
-plt.savefig('E.pdf')
+plt.savefig('../Results/effiency.pdf')
 
 # Show the plots
 plt.show()

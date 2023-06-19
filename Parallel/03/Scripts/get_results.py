@@ -9,6 +9,10 @@ n = int(sys.argv[1])
 exp = int(sys.argv[2])
 nnp = int(sys.argv[3])
 
+# theoretical complexity function: number of operations
+f = lambda k, n : 25 * k * (n ** 3) + 10 * k * (n ** 2) # if ants = 5n
+seq_theoretic_time = 1e-8 * f(100, n) # sequential theoretic time approx.
+
 avg_time = 0.0
 with open(f"Times/times_{n}_{exp}_{nnp}.txt", "r") as file:
     times = [float(line.strip()) for line in file]
@@ -21,6 +25,7 @@ def plot_cost_dist(aco_costs, one_tree_cost):
     ax.axvline(x=one_tree_cost, color='lightseagreen', linestyle='--', label=f'1-Tree Cost: ${one_tree_cost:.2f}$')
     plt.plot([], [], '.', color='white', label=f'ACO Cost STD: ${np.std(aco_costs):.4f}$')
     plt.plot([], [], '.', color='white', label=f'Avg. Running Time: ${avg_time:.2f}s$')
+    plt.plot([], [], '.', color='white', label=f'Avg. Running Time: ${seq_theoretic_time:.2f}s$')
     plt.xlabel('Cost')
     plt.title(f'Cost Distribution Plot: {n} nodes, {exp} experiments, {nnp} processes')
     plt.legend()
@@ -33,6 +38,7 @@ def plot_cost_line(aco_costs, one_tree_cost):
     ax.hlines(y=one_tree_cost, xmin=0, xmax=100, color='lightseagreen', linestyle='-', label=f'1-Tree Cost: ${one_tree_cost:.2f}$')
     plt.plot([], [], '.', color='white', label=f'Min. ACO Cost: ${np.min(aco_costs):.2f}$')
     plt.plot([], [], '.', color='white', label=f'Avg. Running Time: ${avg_time:.2f}s$')
+    plt.plot([], [], '.', color='white', label=f'Avg. Running Time: ${seq_theoretic_time:.2f}s$')
     plt.title(f'Cost Scatter Plot: {n} nodes, {exp} experiments, {nnp} processes')
     plt.legend(loc='center right')
     plt.savefig(f'Results/cost_scatter_plot_{n}_{exp}_{nnp}.pdf', format='pdf')
@@ -43,6 +49,7 @@ def plot_dist(aco_costs, one_tree_cost):
     ax.axvline(x=np.mean(aco_costs/one_tree_cost), linestyle='--', label=f'Avg. Performance: ${np.mean(aco_costs/one_tree_cost):.6f}$')
     ax.axvline(x=np.min(aco_costs/one_tree_cost), color='darkmagenta', linestyle='--', label=f'Best Performance: ${np.min(aco_costs/one_tree_cost):.6f}$')
     plt.plot([], [], '.', color='white', label=f'Avg. Running Time: ${avg_time:.2f}s$')
+    plt.plot([], [], '.', color='white', label=f'Avg. Running Time: ${seq_theoretic_time:.2f}s$')
     plt.title(f'1-Tree Performance Distribution: {n} nodes, {exp} experiments, {nnp} processes')
     plt.xlabel('Performance Rate')
     plt.ylabel('Count')
@@ -134,7 +141,7 @@ nx.draw_networkx_labels(G, pos, font_color='black', font_size=10, labels=labels)
 edge_labels = nx.get_edge_attributes(best_path, 'weight')
 edge_labels = { k : f'{v:.2f}' for k, v in edge_labels.items() }
 #nx.draw_networkx_edge_labels(best_path, pos, edge_labels=edge_labels, font_size=8)
-plt.title(f'Best Solution for {n} nodes, {exp} experiments, {nnp} processes, Avg. Running Time: {avg_time:.2f}s, Performance: {np.min(aco_costs/one_tree_cost):.6f} \n Parameters: Ant Count={int(params[0])}, Iterations={int(params[1])}, Alpha={params[2]:.2f}, Beta={params[3]:.2f}, Rho={params[4]:.2f}, Q={params[5]}', fontdict={'fontsize': 20})
+plt.title(f'Best Solution for {n} nodes, {exp} experiments, {nnp} processes, Avg. Running Time: {avg_time:.2f}s, Seq. Theoretic Time: {seq_theoretic_time:.2f}s, Performance: {np.min(aco_costs/one_tree_cost):.6f} \n Parameters: Ant Count={int(params[0])}, Iterations={int(params[1])}, Alpha={params[2]:.2f}, Beta={params[3]:.2f}, Rho={params[4]:.2f}, Q={params[5]}', fontdict={'fontsize': 20})
 plt.savefig(f'Results/best_solution_{n}_{exp}_{nnp}.pdf', format='pdf')
 
 # Get the sequence of path nodes
