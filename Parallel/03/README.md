@@ -18,3 +18,19 @@ To run the experiments use:
 bash main03.sh np
 ```
 Where np is the number of processes you want to use.
+
+To run the get_results.py script do this from the 03 folder:
+
+```bash
+py Scripts/get_results.py n exp np
+```
+
+Where n is the number of nodes, exp the number of experiments and np the number of processes.
+
+To run the plot_performance.py script do this from the Scripts folder:
+
+```bash
+py plot_performance.py exp np
+```
+
+Where exp is the number of experiments and np the number of processes.
